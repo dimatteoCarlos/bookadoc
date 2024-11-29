@@ -17,8 +17,8 @@ export default function Home() {
             width={1000}
             className='w-fit h-10 mb-12 cursor-pointer'
           />
-          <PatientForm/>
-          
+          <PatientForm />
+
           <footer className={'text-14-regular h-[3rem] flex flex-col gap-1  '}>
             <div className='flex justify-between '>
               <p className='justify-items-end text-dark-600 xl:text-left text-[0.75rem]  xl:text-sm '>
@@ -32,12 +32,12 @@ export default function Home() {
             </div>
 
             <div className='text-dark-600 font-semibold  text-[0.75rem] xl:text-sm xl:text-left text-center'>
-              Made with by 💚 CADR
+              Made with 💚 by CADR
             </div>
           </footer>
         </div>
       </section>
-      
+
       <Image
         className={'side-img sm:block max-w-[50%]'}
         src='/assets/images/onboarding-img.png'

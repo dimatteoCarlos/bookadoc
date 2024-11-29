@@ -130,8 +130,8 @@ const CustomFormField = (props: CustomFormFieldPropType) => {
             {fieldCategory !== FormFieldCategory.CHECKBOX && !!label && (
               <FormLabel className='shad-input-label'>{label}</FormLabel>
             )}
-            {/* form content */}
 
+            {/* form content */}
             <RenderControllerFormInput field={field} props={props} />
 
             <FormMessage className='shad-error'></FormMessage>
