@@ -1,6 +1,7 @@
+import Footer from '@/components/Footer';
 import PatientForm from '@/components/forms/PatientForm';
+import Logo from '@/components/Logo';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -8,33 +9,12 @@ export default function Home() {
       {/* {isAdmin && <PassKeyModal/>} */}
 
       <section className='remove-scrollbar container my-auto*  bordered'>
-        <div className='sub-container justify-between  items-center sm:items-start max-w-[496px]'>
-          <Image
-            src='/assets/icons/logo-full.svg'
-            alt='logo'
-            priority
-            height={1000}
-            width={1000}
-            className='w-fit h-10 mb-12 cursor-pointer'
-          />
+        <div className='sub-container max-w-[496px] flex justify-between  items-center sm:items-start '>
+          <Logo logoPath={'/assets/icons/logo-full.svg'}></Logo>
+
           <PatientForm />
 
-          <footer className={'text-14-regular h-[3rem] flex flex-col gap-1  '}>
-            <div className='flex justify-between '>
-              <p className='justify-items-end text-dark-600 xl:text-left text-[0.75rem]  xl:text-sm '>
-                &copy; 2024. Educational Purposes.
-              </p>
-
-              <Link href='/?admin=true ' className={'text-green-400'}>
-                {' '}
-                &nbsp; Admin
-              </Link>
-            </div>
-
-            <div className='text-dark-600 font-semibold  text-[0.75rem] xl:text-sm xl:text-left text-center'>
-              Made with 💚 by CADR
-            </div>
-          </footer>
+          <Footer />
         </div>
       </section>
 
@@ -44,6 +24,7 @@ export default function Home() {
         height={1000}
         width={1000}
         alt='onboarding patient'
+        priority
       />
     </main>
   );

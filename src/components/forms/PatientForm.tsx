@@ -1,14 +1,12 @@
 'use client';
 
-// import React from 'react'
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { UserFormValidationObj } from '@/lib/validationFormSchema';
 
 import { Form } from '@/components/ui/form';
-import CustomFormField from '../CustomFormField';
+import CustomFormField, {FormFieldCategory} from '../CustomFormField';
 
 import FormSubmitButton from '../FormSubmitButton';
 import { useState } from 'react';
@@ -18,16 +16,16 @@ import { createUser } from '@/lib/actions/patient.actions';
 //Create validation schema
 const formSchema = UserFormValidationObj;
 
-export enum FormFieldCategory {
-  USER_INPUT = 'input',
-  EMAIL_INPUT = 'email',
-  TEXTAREA = 'textarea',
-  PHONE_INPUT = 'phoneInput',
-  CHECKBOX = 'checkbox',
-  DATE_PICKER = 'datePicker',
-  SELECT = 'select',
-  SKELETON = 'skeleton',
-}
+// export enum FormFieldCategory {
+//   USER_INPUT = 'input',
+//   EMAIL_INPUT = 'email',
+//   TEXTAREA = 'textarea',
+//   PHONE_INPUT = 'phoneInput',
+//   CHECKBOX = 'checkbox',
+//   DATE_PICKER = 'datePicker',
+//   SELECT = 'select',
+//   SKELETON = 'skeleton',
+// }
 
 // export type ControlType = {
 //   control: ReturnType<typeof useForm>['control'];
@@ -40,7 +38,7 @@ const PatientForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // 1. Define your form.
-  // useForm: Initializes the form handling. The generic <z.infer<typeof UserFormValidation>> ensures the form follows the Zod validation schema.
+  // useForm: Initializes the form handlin,g. The generic <z.infer<typeof UserFormValidation>> ensures the form follows the Zod validation schema.
   const form = useForm<z.infer<typeof formSchema.validationSchema>>({
     // resolver: Sets up the form to use the Zod schema validation (i.e. UserFormValidation).
     resolver: zodResolver(formSchema.validationSchema),
@@ -111,7 +109,7 @@ const PatientForm = () => {
           iconSrc='/assets/icons/email.svg'
           iconAlt='email'
         />
-        {/* Input email */}
+        {/* Input phone */}
         <CustomFormField
           fieldCategory={FormFieldCategory.PHONE_INPUT}
           control={form.control}

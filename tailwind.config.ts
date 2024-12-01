@@ -47,6 +47,8 @@ const config = {
           600: "#76828D",
           700: "#ABB8C4",
         },
+
+    
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],

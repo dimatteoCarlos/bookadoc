@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 // 'use client';
 
-import { Input } from './ui/input';
 import {
   FormControl,
   // FormDescription,
@@ -10,14 +9,44 @@ import {
   FormLabel,
   FormMessage,
 } from './ui/form';
+import { Label } from './ui/label';
 
-import { FormFieldCategory } from './forms/PatientForm';
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+  // SelectGroup,
+  // SelectItem,
+  // SelectLabel,
+} from '@/components/ui/select';
+
+import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Control } from 'react-hook-form';
 import Image from 'next/image';
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
 
 import { E164Number } from 'libphonenumber-js/core';
+import { Input } from './ui/input';
+
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { GenderOptions } from '@/constants';
+import { SelectLabel } from '@radix-ui/react-select';
+import { Textarea } from './ui/textarea';
+
+export enum FormFieldCategory {
+  USER_INPUT = 'input',
+  EMAIL_INPUT = 'email',
+  TEXTAREA = 'textarea',
+  PHONE_INPUT = 'phoneInput',
+  CHECKBOX = 'checkbox',
+  DATE_PICKER = 'datePicker',
+  SELECT = 'select',
+  SKELETON = 'skeleton',
+  GENDER = 'gender',
+}
 
 export type CustomFormFieldPropType = {
   fieldCategory: FormFieldCategory;
@@ -28,11 +57,10 @@ export type CustomFormFieldPropType = {
   iconSrc?: string;
   iconAlt?: string;
   isDisabled?: boolean;
-
+  showTimeSelect?: boolean;
+  renderSkeleton?: (field: any) => React.ReactNode;
+  children?: React.ReactNode;
   // dateFormat?: string;
-  // showTimeSelect?: boolean;
-  // children?: React.ReactNode;
-  // renderSkeleton?: (field: any) => React.ReactNode;
 };
 
 // RenderControlFormInput for conditionally rendering the input form fields
@@ -43,12 +71,20 @@ const RenderControllerFormInput = ({
   field: any;
   props: CustomFormFieldPropType;
 }) => {
-  const { fieldCategory, placeholder, iconSrc, iconAlt } = props;
+  const {
+    fieldCategory,
+    placeholder,
+    iconSrc,
+    iconAlt,
+    showTimeSelect,
+    renderSkeleton,
+    children,isDisabled, label,
+  } = props;
 
   switch (fieldCategory) {
     case FormFieldCategory.USER_INPUT:
       return (
-        <div className='flex rounded-md border border-dark-500 bg-dark-400 '>
+        <div className='flex rounded-md border border-dark-500 bg-dark-400'>
           {iconSrc && (
             <Image
               src={iconSrc}
@@ -63,7 +99,7 @@ const RenderControllerFormInput = ({
             <Input
               placeholder={placeholder}
               {...field}
-              className='shad-input border-0'
+              className='shad-input border-0 '
             />
           </FormControl>
         </div>
@@ -78,7 +114,7 @@ const RenderControllerFormInput = ({
               alt={iconAlt || 'icon'}
               height={24}
               width={24}
-              className='m-2'
+              className='m-2 w-6 h-auto object-contain'
             />
           )}
           <FormControl>
@@ -90,7 +126,30 @@ const RenderControllerFormInput = ({
           </FormControl>
         </div>
       );
-      break;
+
+      case FormFieldCategory.TEXTAREA:
+        return (
+          <div className='flex rounded-md border border-dark-500 bg-dark-400'>
+            {iconSrc && (
+              <Image
+                src={iconSrc}
+                alt={iconAlt || 'icon'}
+                height={24}
+                width={24}
+                className='m-2'
+                priority
+              />
+            )}
+            <FormControl>
+              <Textarea
+                placeholder={placeholder}
+                {...field}
+                className='shad-textArea border-0 '
+                disabled={isDisabled}
+              />
+            </FormControl>
+          </div>
+        );
 
     case FormFieldCategory.PHONE_INPUT:
       return (
@@ -107,6 +166,87 @@ const RenderControllerFormInput = ({
         </FormControl>
       );
 
+    //------------
+    case FormFieldCategory.DATE_PICKER:
+      return (
+        <div className='datepicker_wrapper flex rounded-md border border-dark-500 bg-dark-400'>
+          <Image
+            src='/assets/icons/calendar.svg'
+            alt='user'
+            className='mx-2'
+            height={24}
+            width={24}
+          />
+
+          <FormControl>
+            <DatePicker
+              selected={field.value}
+              onChange={(date) => field.onChange(date)}
+              dateFormat='dd/MM/yyyy'
+              //dateFormat = 'Pp'
+              showTimeSelect={showTimeSelect ?? false}
+              // timeFormat='p'
+              showYearDropdown
+              scrollableMonthYearDropdown
+            />
+          </FormControl>
+        </div>
+      );
+
+    case FormFieldCategory.SKELETON:
+      return renderSkeleton ? renderSkeleton(field) : null;
+
+    case FormFieldCategory.SELECT:
+      return (
+        <FormControl>
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <FormControl>
+              <SelectTrigger className='shad-select-trigger'>
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent className='shad-select-content'>
+              {children}
+            </SelectContent>
+          </Select>
+        </FormControl>
+      );
+
+    case FormFieldCategory.CHECKBOX:
+      return (
+        <FormControl>
+          <PhoneInput
+            defaultCountry='US'
+            placeholder={placeholder}
+            international
+            withCountryCallingCode
+            value={field.value as E164Number | undefined} //why field.value
+            onChange={field.onChange}
+            className='input-phone'
+          />
+        </FormControl>
+      );
+
+    case FormFieldCategory.GENDER:
+      return (
+        <FormControl>
+          <RadioGroup
+            onValueChange={field.onChange}
+            defaultValue={field.value}
+            className='radio-group flex h-11 gap-6 xl:justify-between '
+          >
+            {GenderOptions.map((gender, i) => (
+              <div className='radio-group' key={gender + i}>
+                <RadioGroupItem value={gender} id={gender} className={''} />
+                <Label htmlFor={gender} className='cursor-pointer '>
+                  {gender}
+                </Label>
+              </div>
+            ))}
+          </RadioGroup>
+        </FormControl>
+      );
+
     default:
       break;
   }
@@ -117,8 +257,7 @@ const RenderControllerFormInput = ({
 // El control, retornado por useForm de react-hook-form, es un objeto que proporciona el acceso a métodos de manejo de formularios como la validación y el registro de los campos.
 
 const CustomFormField = (props: CustomFormFieldPropType) => {
-  const { fieldCategory, control, name, label, placeholder, iconSrc, iconAlt } =
-    props;
+  const { fieldCategory, control, name, label } = props;
 
   return (
     <div>
@@ -126,12 +265,13 @@ const CustomFormField = (props: CustomFormFieldPropType) => {
         control={control}
         name={name}
         render={({ field }) => (
-          <FormItem className='flex-1'>
+          <FormItem className='flex-1 '>
             {fieldCategory !== FormFieldCategory.CHECKBOX && !!label && (
               <FormLabel className='shad-input-label'>{label}</FormLabel>
             )}
 
             {/* form content */}
+
             <RenderControllerFormInput field={field} props={props} />
 
             <FormMessage className='shad-error'></FormMessage>
