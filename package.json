@@ -33,6 +33,7 @@
     "react-datepicker": "^7.5.0",
     "react-day-picker": "^8.10.1",
     "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react-dropzone": "^14.3.5",
     "react-hook-form": "^7.53.2",
     "react-phone-number-input": "^3.4.9",
     "tailwind-merge": "^2.5.4",

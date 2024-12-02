@@ -35,6 +35,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { GenderOptions } from '@/constants';
 import { SelectLabel } from '@radix-ui/react-select';
 import { Textarea } from './ui/textarea';
+import { Checkbox } from './ui/checkbox';
 
 export enum FormFieldCategory {
   USER_INPUT = 'input',
@@ -60,6 +61,7 @@ export type CustomFormFieldPropType = {
   showTimeSelect?: boolean;
   renderSkeleton?: (field: any) => React.ReactNode;
   children?: React.ReactNode;
+  className?: string;
   // dateFormat?: string;
 };
 
@@ -78,7 +80,11 @@ const RenderControllerFormInput = ({
     iconAlt,
     showTimeSelect,
     renderSkeleton,
-    children,isDisabled, label,
+    children,
+    isDisabled,
+    name,
+    label,
+    className,
   } = props;
 
   switch (fieldCategory) {
@@ -127,29 +133,31 @@ const RenderControllerFormInput = ({
         </div>
       );
 
-      case FormFieldCategory.TEXTAREA:
-        return (
-          <div className='flex rounded-md border border-dark-500 bg-dark-400'>
-            {iconSrc && (
-              <Image
-                src={iconSrc}
-                alt={iconAlt || 'icon'}
-                height={24}
-                width={24}
-                className='m-2'
-                priority
-              />
-            )}
-            <FormControl>
-              <Textarea
-                placeholder={placeholder}
-                {...field}
-                className='shad-textArea border-0 '
-                disabled={isDisabled}
-              />
-            </FormControl>
-          </div>
-        );
+    case FormFieldCategory.TEXTAREA:
+      return (
+        <div className='flex rounded-md border border-dark-500 bg-dark-400'>
+          {iconSrc && (
+            <Image
+              src={iconSrc}
+              alt={iconAlt || 'icon'}
+              height={24}
+              width={24}
+              className='m-2'
+              priority
+            />
+          )}
+          <FormControl>
+            <Textarea
+              placeholder={placeholder}
+              {...field}
+              className={`shad-textArea border-0 resize-none ${className}`}
+              disabled={isDisabled}
+              maxLength='255'
+              rows='5'
+            />
+          </FormControl>
+        </div>
+      );
 
     case FormFieldCategory.PHONE_INPUT:
       return (
@@ -215,15 +223,15 @@ const RenderControllerFormInput = ({
     case FormFieldCategory.CHECKBOX:
       return (
         <FormControl>
-          <PhoneInput
-            defaultCountry='US'
-            placeholder={placeholder}
-            international
-            withCountryCallingCode
-            value={field.value as E164Number | undefined} //why field.value
-            onChange={field.onChange}
-            className='input-phone'
-          />
+          <div className='flex items-center gap-4'>
+            <Checkbox
+              id={name}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              className='checkbox'
+            />
+            <label>{label}</label>
+          </div>
         </FormControl>
       );
 

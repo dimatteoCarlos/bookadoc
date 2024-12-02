@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { PatientFormValidationObj } from '@/lib/validationFormSchema';
 
-import { Form } from '@/components/ui/form';
+import { Form, FormControl } from '@/components/ui/form';
 import { SelectGroup, SelectItem, SelectLabel } from '@/components/ui/select';
 
 import CustomFormField, { FormFieldCategory } from '../CustomFormField';
@@ -20,6 +20,8 @@ import { Doctors, GenderOptions, IdentificationTypes } from '@/constants';
 import { createUser } from '@/lib/actions/patient.actions';
 import { TitleForm } from '../TitleForm';
 import Image from 'next/image';
+import FileUploader from '../FileUploader';
+import { FileDiff, FileUp } from 'lucide-react';
 
 /*
 import { SelectItem } from "@/components/ui/select"; 
@@ -30,6 +32,7 @@ export type TitleFormPropType = { formTitle: string };
 
 //----------------------------
 const RegisterForm = ({ user }: { user: UserType }) => {
+  //-------------------
   //Create validation schema
   const formSchemaValidation = PatientFormValidationObj;
   const router = useRouter();
@@ -228,13 +231,14 @@ const RegisterForm = ({ user }: { user: UserType }) => {
           </div>
 
           {/* ALLERGY & CURRENT MEDICATIONS */}
-          <div className='flex flex-col gap-6 xl:flex-row'>
+          <div className='flex flex-col gap-6 xxl:flex-row'>
             <CustomFormField
               fieldCategory={FormFieldCategory.TEXTAREA}
               control={form.control}
               name='allergies'
               label='Allergies (if any)'
               placeholder='ex.:Peanuts, Pollen, AINES'
+              className='bg-red-500 resize-none focus:outline-none '
             />
 
             <CustomFormField
@@ -247,7 +251,7 @@ const RegisterForm = ({ user }: { user: UserType }) => {
           </div>
 
           {/* FAMILY MEDICATION & PAST MEDICATIONS */}
-          <div className='flex flex-col gap-6 xl:flex-row'>
+          <div className='flex flex-col gap-6 xxl:flex-row'>
             <CustomFormField
               fieldCategory={FormFieldCategory.TEXTAREA}
               control={form.control}
@@ -266,8 +270,75 @@ const RegisterForm = ({ user }: { user: UserType }) => {
           </div>
         </section>
 
-        <div className='email_and_phone flex flex-col gap-6 xl:flex-row'></div>
-        <div className='email_and_phone flex flex-col gap-6 xl:flex-row'></div>
+        <section className='sectionForm__3 space-y-4'>
+          <TitleForm formTitle='Identification and Verification' />
+
+          <div className='email_and_phone flex flex-col gap-6 xl:flex-row'>
+            <CustomFormField
+              fieldCategory={FormFieldCategory.SELECT}
+              control={form.control}
+              name='identificationType'
+              label='Identification Type'
+            >
+              {IdentificationTypes.map((idtype, i) => (
+                <SelectItem value={idtype} key={idtype + i}>
+                  {idtype}
+                </SelectItem>
+              ))}
+            </CustomFormField>
+
+            <CustomFormField
+              fieldCategory={FormFieldCategory.USER_INPUT}
+              control={form.control}
+              name='identificationNumber'
+              label='Identification Number'
+              placeholder={'valid identification number'}
+            />
+          </div>
+
+          <CustomFormField
+            fieldCategory={FormFieldCategory.SKELETON}
+            control={form.control}
+            name='identificationDocument'
+            label='Identification Document'
+            placeholder={'Scanned of Identification Document'}
+            renderSkeleton={(field) => (
+              <FormControl>
+                <FileUploader
+                  files={field.value}
+                  onChange={field.onChange}
+                ></FileUploader>
+              </FormControl>
+            )}
+          />
+        </section>
+
+        <section className='sectionForm__4 space-y-4'>
+          <TitleForm formTitle='Consent and Privacy' />
+
+          <CustomFormField
+            fieldCategory={FormFieldCategory.CHECKBOX}
+            control={form.control}
+            name='treatmentConsent'
+            label='I consent to receive treatment for my health condition.'
+          />
+
+          <CustomFormField
+            fieldCategory={FormFieldCategory.CHECKBOX}
+            control={form.control}
+            name='disclosureConsent'
+            label='I consent to the use and disclosure of my health
+            information for treatment purposes.'
+          />
+
+          <CustomFormField
+            fieldCategory={FormFieldCategory.CHECKBOX}
+            control={form.control}
+            name='privacyConsent'
+            label='I acknowledge that I have reviewed and agreed to the
+            privacy policy'
+          />
+        </section>
 
         <FormSubmitButton isLoading={isLoading}>Get Started</FormSubmitButton>
       </form>
