@@ -12,6 +12,7 @@ export const UserFormValidation = z.object({
 });
 
 //phone:z.string().refine((phone)=>/^\+?[1-9]\d{1-14}$/.test(phone))
+
 export const UserFormValidationObj = {
   validationSchema: UserFormValidation,
   defaultValues: { name: '', email: '', phone: '' },
@@ -26,9 +27,11 @@ export const PatientFormValidation = z.object({
   phone: z
     .string()
     .refine((phone) => /^\+\d{10,15}$/.test(phone), 'Invalid phone number'),
+
   //coerce: Es un método de Zod que permite forzar la conversión de un valor a un tipo específico, en lugar de solo validar si el valor ya es del tipo esperado.
+
   birthDate: z.coerce.date(),
-  gender: z.enum(['Male', 'Female', 'Other']),
+  gender: z.enum(['male', 'female', 'other']),
   address: z
     .string()
     .min(5, 'Address must be at least 5 characters')
@@ -89,7 +92,7 @@ export const PatientFormDefaultValues = {
   email: '',
   phone: '',
   birthDate: new Date(Date.now()),
-  gender: 'Male' as Gender,
+  gender: 'male' as Gender,
   address: '',
   occupation: '',
   emergencyContactName: '',

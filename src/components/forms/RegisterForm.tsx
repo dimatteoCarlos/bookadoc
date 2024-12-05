@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { PatientFormValidationObj } from '@/lib/validationFormSchema';
 
 import { Form, FormControl } from '@/components/ui/form';
-import { SelectGroup, SelectItem, SelectLabel } from '@/components/ui/select';
+import { SelectItem } from '@/components/ui/select';
 
 import CustomFormField, { FormFieldCategory } from '../CustomFormField';
 
@@ -14,67 +14,99 @@ import FormSubmitButton from '../FormSubmitButton';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { Doctors, GenderOptions, IdentificationTypes } from '@/constants';
+import { Doctors, IdentificationTypes } from '@/constants';
 
 // import { registerPatient } from "@/lib/actions/patient.actions";
-import { createUser } from '@/lib/actions/patient.actions';
+import { createUser, registerPatient } from '@/lib/actions/patient.actions';
 import { TitleForm } from '../TitleForm';
 import Image from 'next/image';
 import FileUploader from '../FileUploader';
-import { FileDiff, FileUp } from 'lucide-react';
-
-/*
-import { SelectItem } from "@/components/ui/select"; 
-import { FileUploader } from "../FileUploader";
-*/
-
-export type TitleFormPropType = { formTitle: string };
 
 //----------------------------
 const RegisterForm = ({ user }: { user: UserType }) => {
+
+  const {name, phone, email, $id}=user
+
+  console.log('id:', $id)
+
   //-------------------
   //Create validation schema
   const formSchemaValidation = PatientFormValidationObj;
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchemaValidation.validationSchema>>({
     resolver: zodResolver(formSchemaValidation.validationSchema),
-    defaultValues: formSchemaValidation.defaultValues,
+    defaultValues: {...formSchemaValidation.defaultValues, name, phone, email}
   });
 
   // 2. Define a submit handler.
   const onSubmit = async (
+    
     values: z.infer<typeof formSchemaValidation.validationSchema>
   ) => {
     setIsLoading(true);
 
-    // Store file info in form data as
+    if (
+      values.identificationDocument &&
+      values.identificationDocument?.length > 0
+    ) {
+      //
+      console.log('ID:', values.identificationDocument);
+      //Blob sintaxis is: new Blob(array, options), where optional options can be: type and/or endings.
+      const blobFile = new Blob([values.identificationDocument[0]], {
+        type: values.identificationDocument[0].type,
+      });
 
-    try {
-      // const { name, email, phone } = values;
+      let formDataFileBlob = new FormData();
 
-      const user = { ...values };
+      formDataFileBlob.append('blobFile', blobFile);
+      formDataFileBlob.append(
+        'blobFileName',
+        values.identificationDocument[0].name
+      );
 
-      console.log('user:', user);
+      console.log(
+        'VID:',
+        values.identificationDocument[0],
+        'formDataFileBlob:',
+        formDataFileBlob
+      );
 
-      const newUser = await createUser(user);
-      console.log('newUser:', newUser);
+      try {
+        const patientInfo = {
+          ...values,
+          userId: user.$id, 
+          birthDate: new Date(values.birthDate),
+          identificationDocument: values.identificationDocument //redundant since the if block already asked for the existance of identificationDocument
+            ? formDataFileBlob
+            : undefined,
+        } as RegisterUserParamsType;
 
-      if (newUser) {
-        router.push(`/patients/${newUser.$id}/register`);
+        console.log('patientInfo:', patientInfo);
+
+        //
+        const newPatient = await registerPatient(patientInfo);
+
+        console.log('newPatient:', newPatient);
+
+        if (newPatient) {
+          router.push(`/patients/${user.$id}/new-appointement`);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log('endpoint:', process.env.NEXT_PUBLIC_ENDPOINT);
-      console.log(error);
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   //field category and its schema
+  
 
   return (
+
+
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
@@ -188,6 +220,7 @@ const RegisterForm = ({ user }: { user: UserType }) => {
         <section className='sectionForm__2 space-y-6'>
           <TitleForm formTitle='Medical Information' />
 
+          {/* SELECT A PYSICIAN */}
           <CustomFormField
             fieldCategory={FormFieldCategory.SELECT}
             control={form.control}
@@ -250,7 +283,7 @@ const RegisterForm = ({ user }: { user: UserType }) => {
             />
           </div>
 
-          {/* FAMILY MEDICATION & PAST MEDICATIONS */}
+          {/* FAMILY MEDICATION & HISTORY MEDICATIONS */}
           <div className='flex flex-col gap-6 xxl:flex-row'>
             <CustomFormField
               fieldCategory={FormFieldCategory.TEXTAREA}
@@ -296,6 +329,7 @@ const RegisterForm = ({ user }: { user: UserType }) => {
             />
           </div>
 
+          {/* UPLOAD DOCUMENT IMAGE FILE */}
           <CustomFormField
             fieldCategory={FormFieldCategory.SKELETON}
             control={form.control}

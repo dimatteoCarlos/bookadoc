@@ -1,15 +1,15 @@
-import Footer from '@/components/Footer';
-import PatientForm from '@/components/forms/PatientForm';
 import Logo from '@/components/Logo';
 import Image from 'next/image';
+import Footer from '@/components/Footer';
+import PatientForm from '@/components/forms/PatientForm';
 
 export default function Home() {
   return (
     <main className={'flex h-screen max-h-screen'}>
       {/* {isAdmin && <PassKeyModal/>} */}
 
-      <section className='remove-scrollbar container my-auto*  bordered'>
-        <div className='sub-container max-w-[496px] flex justify-between  items-center sm:items-start '>
+      <section className='remove-scrollbar container my-autox'>
+        <div className='sub-container max-w-[496px] flex justify-between  items-start'>
           <Logo logoPath={'/assets/icons/logo-full.svg'}></Logo>
 
           <PatientForm />

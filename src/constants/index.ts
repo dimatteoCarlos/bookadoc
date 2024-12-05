@@ -1,4 +1,4 @@
-export const GenderOptions: string[] = ['Male', 'Female', 'Other'];
+export const GenderOptions: string[] = ['male', 'female', 'other'];
 
 export const IdentificationTypes: string[] = [
   'Birth Certificate',

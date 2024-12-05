@@ -8,8 +8,10 @@ import { getUser } from '@/lib/actions/patient.actions';
 
 const Register = async ({ params, ...searchParams }: SearchParamPropsType) => {
   const { userId } = await params;
-  console.log(typeof searchParams, await searchParams);
+  console.log(typeof searchParams, await searchParams, 'userId:', userId);
+
   const user = await getUser(userId);
+  
   return (
     <main className='h-screen flex max-h-screen '>
       <section className='remove-scrollbar container'>
@@ -22,7 +24,7 @@ const Register = async ({ params, ...searchParams }: SearchParamPropsType) => {
         </div>
       </section>
 
-      <SideImage imageUrl='/assets/images/register-img.png' className='max-w-[45%]' />
+      <SideImage imageUrl='/assets/images/register-img.png' className='max-w-[350px]' />
     </main>
   );
 };

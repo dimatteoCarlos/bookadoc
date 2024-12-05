@@ -1,5 +1,6 @@
 'use client';
-import { TitleFormPropType } from './forms/RegisterForm';
+
+export type TitleFormPropType = { formTitle: string };
 
 export const TitleForm = ({ formTitle }: TitleFormPropType) => {
   return (

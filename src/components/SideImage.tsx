@@ -2,7 +2,7 @@ import { getFileName } from '@/lib/utils';
 import Image from 'next/image';
 import React from 'react';
 
-type SideImagePropType = { imageUrl: string, className:string};
+type SideImagePropType = { imageUrl: string, className?:string};
 
 const SideImage = ({ imageUrl, className }: SideImagePropType) => {
   return (

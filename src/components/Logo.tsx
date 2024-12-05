@@ -3,7 +3,6 @@ export type LogoPropType = { logoPath: string };
 const Logo = ({ logoPath }: LogoPropType) => {
   return (
     <Image
-      // src='/assets/icons/logo-full.svg'
       src={logoPath}
       alt='logo'
       priority

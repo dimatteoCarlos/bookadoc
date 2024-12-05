@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { UserFormValidationObj } from '@/lib/validationFormSchema';
 
 import { Form } from '@/components/ui/form';
-import CustomFormField, {FormFieldCategory} from '../CustomFormField';
+import CustomFormField, { FormFieldCategory } from '../CustomFormField';
 
 import FormSubmitButton from '../FormSubmitButton';
 import { useState } from 'react';
@@ -16,21 +16,6 @@ import { createUser } from '@/lib/actions/patient.actions';
 //Create validation schema
 const formSchema = UserFormValidationObj;
 
-// export enum FormFieldCategory {
-//   USER_INPUT = 'input',
-//   EMAIL_INPUT = 'email',
-//   TEXTAREA = 'textarea',
-//   PHONE_INPUT = 'phoneInput',
-//   CHECKBOX = 'checkbox',
-//   DATE_PICKER = 'datePicker',
-//   SELECT = 'select',
-//   SKELETON = 'skeleton',
-// }
-
-// export type ControlType = {
-//   control: ReturnType<typeof useForm>['control'];
-// };
-
 const PatientForm = () => {
   // router: Initializes the Next.js router to allow navigation after the form is successfully submitted.
   const router = useRouter();
@@ -38,7 +23,7 @@ const PatientForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // 1. Define your form.
-  // useForm: Initializes the form handlin,g. The generic <z.infer<typeof UserFormValidation>> ensures the form follows the Zod validation schema.
+  // useForm: Initializes the form handling. The generic <z.infer<typeof UserFormValidation>> ensures the form follows the Zod validation schema.
   const form = useForm<z.infer<typeof formSchema.validationSchema>>({
     // resolver: Sets up the form to use the Zod schema validation (i.e. UserFormValidation).
     resolver: zodResolver(formSchema.validationSchema),
@@ -48,33 +33,28 @@ const PatientForm = () => {
 
   // 2. Define a submit handler.
 
-  // console.log('esto es form:', form);
-
   const onSubmit = async (
     values: z.infer<typeof formSchema.validationSchema>
   ) => {
     setIsLoading(true);
     try {
-      // const { name, email, phone } = values;
 
       const user = { ...values };
 
-      console.log('user:', user);
-
-      const newUser = await createUser(user);
-      console.log('newUser:', newUser)
-
-      if (newUser) {
+      //test-----
+      const newUser = { ...user, $id: '674924718b8f09fa0443' };
+      console.log('newUser:', newUser);
+      if (true) {
+        //----------
+        // const newUser = await createUser(user);
+        // if (newUser) {
         router.push(`/patients/${newUser.$id}/register`);
       }
     } catch (error) {
-      console.log('endpoint:', process.env.NEXT_PUBLIC_ENDPOINT);
       console.log(error);
     }
     setIsLoading(false);
   };
-
-  //field category and its schema
 
   return (
     <Form {...form}>

@@ -25,10 +25,29 @@
     background: transparent;
   }
 }
+/*-----------*/
+.reset-button {
+  margin-top: 10px;
+  background-color: #363a3d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
 
+.reset-button:hover {
+  background-color: #1a1d21;
+}
+
+/**/
 @layer utilities {
   .bordered {
     @apply border-solid border-yellow-500 border-[1px];
+  }
+
+  .uploadedImage {
+    /* filter:   hue-rotate(290deg); */
   }
   /* ===== UTILITIES */
   .sidebar {
@@ -205,7 +224,6 @@
   .shad-input {
     /* @apply h-11; */
     @apply bg-dark-400 placeholder:text-dark-600 border-dark-500 h-auto !important;
-
   }
 
   .shad-input-icon {
