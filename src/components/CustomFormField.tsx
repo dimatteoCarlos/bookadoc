@@ -33,7 +33,7 @@ import { Input } from './ui/input';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { GenderOptions } from '@/constants';
-import { SelectLabel } from '@radix-ui/react-select';
+// import { SelectLabel } from '@radix-ui/react-select';
 import { Textarea } from './ui/textarea';
 import { Checkbox } from './ui/checkbox';
 
@@ -59,10 +59,11 @@ export type CustomFormFieldPropType = {
   iconAlt?: string;
   isDisabled?: boolean;
   showTimeSelect?: boolean;
+  showYearDropdown?: boolean;
   renderSkeleton?: (field: any) => React.ReactNode;
   children?: React.ReactNode;
   className?: string;
-  // dateFormat?: string;
+  dateFormat?: string;
 };
 
 // RenderControlFormInput for conditionally rendering the input form fields
@@ -79,12 +80,14 @@ const RenderControllerFormInput = ({
     iconSrc,
     iconAlt,
     showTimeSelect,
+    showYearDropdown,
     renderSkeleton,
     children,
     isDisabled,
     name,
     label,
     className,
+    dateFormat,
   } = props;
 
   switch (fieldCategory) {
@@ -135,7 +138,7 @@ const RenderControllerFormInput = ({
 
     case FormFieldCategory.TEXTAREA:
       return (
-        <div className='flex rounded-md border border-dark-500 bg-dark-400'>
+        <div className='flex rounded-md border border-dark-500 bg-dark-400 w-full'>
           {iconSrc && (
             <Image
               src={iconSrc}
@@ -150,7 +153,7 @@ const RenderControllerFormInput = ({
             <Textarea
               placeholder={placeholder}
               {...field}
-              className={`shad-textArea border-0 resize-none ${className}`}
+              className={`shad-textArea border-0 resize-none w-full`}
               disabled={isDisabled}
               maxLength='255'
               rows='5'
@@ -190,12 +193,12 @@ const RenderControllerFormInput = ({
             <DatePicker
               selected={field.value}
               onChange={(date) => field.onChange(date)}
-              dateFormat='dd/MM/yyyy'
-              //dateFormat = 'Pp'
+              dateFormat={dateFormat ?? 'dd/MM/yyyy'}
               showTimeSelect={showTimeSelect ?? false}
-              // timeFormat='p'
-              showYearDropdown
+              showYearDropdown={showYearDropdown ?? true}
               scrollableMonthYearDropdown
+              //dateFormat = 'Pp'
+              // timeFormat='p'
             />
           </FormControl>
         </div>
@@ -265,10 +268,10 @@ const RenderControllerFormInput = ({
 // El control, retornado por useForm de react-hook-form, es un objeto que proporciona el acceso a métodos de manejo de formularios como la validación y el registro de los campos.
 
 const CustomFormField = (props: CustomFormFieldPropType) => {
-  const { fieldCategory, control, name, label } = props;
+  const { fieldCategory, control, name, label, isDisabled} = props;
 
   return (
-    <div>
+    <div className='customFormField w-full'>
       <FormField
         control={control}
         name={name}

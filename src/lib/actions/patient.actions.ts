@@ -67,6 +67,22 @@ export async function getUser(userId: string) {
   }
 }
 
+/*appwrite returns: {
+  "$id": "user1234",
+  "$createdAt": "2024-01-01T00:00:00.000Z",
+  "$updatedAt": "2024-12-06T10:00:00.000Z",
+  "email": "user@example.com",
+  "name": "John Doe",
+  "registration": {
+    "provider": "email",
+    "date": "2024-01-01T00:00:00.000Z"
+  },
+  "prefs": {
+    // Preferencias del usuario, si están configuradas
+  }
+}
+  */
+
 //REGISTER PATIENT
 
 export const registerPatient = async ({
@@ -76,22 +92,22 @@ export const registerPatient = async ({
   try {
     // Upload file ->  // https://appwrite.io/docs/references/cloud/client-web/storage#createFile
     let fileUploaded;
-    console.log(
-      'type of ID:',
-      typeof identificationDocument,
-      'ID:',
-      identificationDocument
-    );
+    // console.log(
+    //   'type of ID:',
+    //   typeof identificationDocument,
+    //   'ID:',
+    //   identificationDocument
+    // );
 
     if (identificationDocument) {
       //sintaxis of InputFile from appwrite: The InputFile class in the Appwrite Node.js SDK is a file object used to represent a file that is going to be uploaded
+
       // InputFile.fromBlob(blob: Blob, fileName: string): InputFile
 
       const inputFile = InputFile.fromBuffer(
         identificationDocument?.get('blobFile') as Blob,
         identificationDocument?.get('blobFileName') as string
       );
-      console.log('🚀 ~ inputFile:', inputFile);
 
       fileUploaded = await storage_module.createFile(
         BUCKET_ID!,
@@ -115,25 +131,45 @@ export const registerPatient = async ({
         }
       );
 
-      console.log(
-        'docId:',
-        newPatient.identificationDocumentId
-        // 'docUrl:', newPatient.identificationDocumentUrl
-      );
-
-      console.log(
-        'Reg Action parseStringify: ',
-        parseStringify<Models.Document>(newPatient)
-      );
+      // console.log(
+      //   'Reg Action parseStringify: ',
+      //   parseStringify<Models.Document>(newPatient)
+      // );
 
       return parseStringify<Models.Document>(newPatient);
     }
-  } catch (error :any) {
+  } catch (error: any) {
     console.error('An error occurred while registering a new patient:', error);
+
     // return { success: false, error: error.message || "An internal error occurred. Please try again later." };
- 
   }
 };
+
+//GET PATIENT
+
+export async function getPatient(userId: string) {
+  try {
+    const patientDocuments = await databases_module.listDocuments(
+      DATABASE_ID!,
+      PATIENT_COLLECTION_ID!,
+
+      [
+        Query.equal('userId', [userId]), //
+      ]
+    );
+
+    return parseStringify(patientDocuments.documents[0]);
+
+  } catch (error) {
+    
+    console.error(
+      'An error occurred while retrieving the patient documents of ',
+      userId,
+      ' ',
+      error
+    );
+  }
+}
 
 //Query es un módulo del SDK de Appwrite que te permite construir filtros para buscar o consultar datos en la base de datos o en listas de usuarios. Funciona creando consultas específicas basadas en condiciones
 

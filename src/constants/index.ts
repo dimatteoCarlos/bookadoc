@@ -51,7 +51,7 @@ export const Doctors: { image: string; name: string }[] = [
   },
   {
     image: '/assets/images/dr-m-05.png',
-    name: 'Terry Boal',
+    name: 'Terry Boyle',
   },
 ];
 

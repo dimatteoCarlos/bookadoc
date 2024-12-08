@@ -11,7 +11,8 @@
 
 import { Models } from "node-appwrite";
 
-export interface Patient extends Models.Document {
+//check RegisterUserParamsType usage
+export interface PatientType extends Models.Document {
   userId: string;
   name: string;
   email: string;
@@ -35,8 +36,8 @@ export interface Patient extends Models.Document {
   privacyConsent: boolean;
 }
 
-export interface Appointment extends Models.Document {
-  patient: Patient;
+export interface AppointmentType extends Models.Document {
+  patient: PatientType;
   schedule: Date;
   status: Status;
   primaryPhysician: string;

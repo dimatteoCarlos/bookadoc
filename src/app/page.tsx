@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import PatientForm from '@/components/forms/PatientForm';
 
 export default function Home() {
+
   return (
     <main className={'flex h-screen max-h-screen'}>
       {/* {isAdmin && <PassKeyModal/>} */}
@@ -29,3 +30,5 @@ export default function Home() {
     </main>
   );
 }
+
+

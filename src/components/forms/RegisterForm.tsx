@@ -24,10 +24,9 @@ import FileUploader from '../FileUploader';
 
 //----------------------------
 const RegisterForm = ({ user }: { user: UserType }) => {
+  const { name, phone, email, $id } = user;
 
-  const {name, phone, email, $id}=user
-
-  console.log('id:', $id)
+  console.log('id:', $id);
 
   //-------------------
   //Create validation schema
@@ -38,12 +37,17 @@ const RegisterForm = ({ user }: { user: UserType }) => {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchemaValidation.validationSchema>>({
     resolver: zodResolver(formSchemaValidation.validationSchema),
-    defaultValues: {...formSchemaValidation.defaultValues, name, phone, email}
+    defaultValues: {
+      ...formSchemaValidation.defaultValues,
+      name,
+      phone,
+      email,
+    },
   });
 
   // 2. Define a submit handler.
   const onSubmit = async (
-    
+    //values: Es el parámetro de entrada de la función onSubmit, que representa los datos del formulario.
     values: z.infer<typeof formSchemaValidation.validationSchema>
   ) => {
     setIsLoading(true);
@@ -77,7 +81,7 @@ const RegisterForm = ({ user }: { user: UserType }) => {
       try {
         const patientInfo = {
           ...values,
-          userId: user.$id, 
+          userId: user.$id,
           birthDate: new Date(values.birthDate),
           identificationDocument: values.identificationDocument //redundant since the if block already asked for the existance of identificationDocument
             ? formDataFileBlob
@@ -92,7 +96,7 @@ const RegisterForm = ({ user }: { user: UserType }) => {
         console.log('newPatient:', newPatient);
 
         if (newPatient) {
-          router.push(`/patients/${user.$id}/new-appointement`);
+          router.push(`/patients/${user.$id}/new-appointment`);
         }
       } catch (error) {
         console.log(error);
@@ -102,11 +106,8 @@ const RegisterForm = ({ user }: { user: UserType }) => {
   };
 
   //field category and its schema
-  
 
   return (
-
-
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}

@@ -1,5 +1,16 @@
 import { z } from 'zod';
 
+//-------date time validation ------
+import { parse, isValid, setHours, setMinutes } from 'date-fns';
+const dateFormat = 'dd/MM/yyyy - h:mm a';
+
+const validateBusinessHours = (date: Date) => {
+  const startOfDay = setHours(setMinutes(date, 0), 8); //8:00 am}
+  const endOfDay = setHours(setMinutes(date, 0), 17); //5:00pm}
+  console.log(date, startOfDay, endOfDay);
+  return date >= startOfDay && endOfDay;
+};
+
 export const UserFormValidation = z.object({
   name: z
     .string()
@@ -92,7 +103,7 @@ export const PatientFormDefaultValues = {
   email: '',
   phone: '',
   birthDate: new Date(Date.now()),
-  gender: 'male' as Gender,
+  gender: 'male' as GenderType,
   address: '',
   occupation: '',
   emergencyContactName: '',
@@ -123,6 +134,17 @@ export const PatientFormValidationObj = {
 export const CreateAppointmentSchema = z.object({
   primaryPhysician: z.string().min(2, 'Select at least one doctor'),
   schedule: z.coerce.date(),
+
+  // schedule: z.string().refine(
+  //   (val) => {
+  //     const parseDate = parse(val, dateFormat, new Date());
+
+  //     //Comprabar si la fecha es valida y esta dentro del rango de horas
+  //     return isValid(parseDate) && validateBusinessHours(parseDate);
+  //   },
+  //   { message: 'Schedule must be between 8:00 am and 5:00 pm' }
+  // ),
+
   reason: z
     .string()
     .min(2, 'Reason must be at least 2 characters')
@@ -159,4 +181,77 @@ export function getAppointmentSchema(type: string) {
     default:
       return ScheduleAppointmentSchema;
   }
+}
+
+// *******************
+
+// Esquema base con campos comunes
+const BaseAppointmentSchema = z.object({
+  primaryPhysician: z.string().min(2, 'Select at least one doctor'),
+
+  schedule: z.coerce.date().refine(
+    (val) => {
+      const parseDate = parse(val.toISOString(), dateFormat, new Date());
+      // Verificar si la fecha es válida antes de hacer la validación adicional
+
+      if (!isValid(parseDate)) {
+        return false; // Retornar `false` si la fecha es inválida
+      }
+
+      //Comprabar si la fecha es valida y esta dentro del rango de horas
+      return isValid(parseDate) && validateBusinessHours(parseDate);
+    },
+    { message: 'Schedule must be between 8:00 am and 5:00 pm' }
+  ),
+  note: z.string().optional(),
+  cancellationReason: z.string().optional(),
+});
+
+export const CreateAppointmentSchemaII = BaseAppointmentSchema.extend({
+  reason: z
+    .string()
+    .min(2, 'Reason must be at least 2 characters')
+    .max(500, 'Reason must be at most 500 characters'),
+});
+
+export const ScheduleAppointmentSchemaII = BaseAppointmentSchema.extend({
+  reason: z.string().optional(),
+});
+
+export const CancelAppointmentSchemaII = BaseAppointmentSchema.extend({
+  reason: z.string().optional(),
+  cancellationReason: z
+    .string()
+    .min(2, 'Cancellation reason must be at least 2 characters')
+    .max(500, 'Cancellation reason must be at most 500 characters'),
+});
+
+export type appointmentInfoType = {
+  primaryPhysician: string;
+  schedule: Date;
+  reason?: string;
+  note?: string;
+  cancellationReason?: string;
+};
+
+export const appointmentFormDefaultValues = {
+  primaryPhysician: '',
+  schedule: new Date(),
+  reason: '',
+  note: '',
+  cancellationReason: '',
+};
+
+export function getAppointmentActionSchema(type: AppointmentActionType) {
+  const schemaAppointmentAction = {
+    create: CreateAppointmentSchemaII,
+    cancel: CancelAppointmentSchemaII,
+    schedule: ScheduleAppointmentSchemaII,
+  };
+
+  const result = {
+    validationSchema: schemaAppointmentAction[type],
+    defaultValues: appointmentFormDefaultValues,
+  };
+  return result;
 }

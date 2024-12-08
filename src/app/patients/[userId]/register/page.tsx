@@ -11,7 +11,7 @@ const Register = async ({ params, ...searchParams }: SearchParamPropsType) => {
   console.log(typeof searchParams, await searchParams, 'userId:', userId);
 
   const user = await getUser(userId);
-  
+
   return (
     <main className='h-screen flex max-h-screen '>
       <section className='remove-scrollbar container'>
@@ -24,7 +24,10 @@ const Register = async ({ params, ...searchParams }: SearchParamPropsType) => {
         </div>
       </section>
 
-      <SideImage imageUrl='/assets/images/register-img.png' className='max-w-[350px]' />
+      <SideImage
+        imageUrl='/assets/images/register-img.png'
+        className='max-w-[350px]'
+      />
     </main>
   );
 };

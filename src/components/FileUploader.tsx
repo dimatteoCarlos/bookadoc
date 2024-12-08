@@ -54,7 +54,7 @@ const FileUploader = ({ files, onChange }: FileUploaderPropsType) => {
         <>
           <Image
             src='/assets/icons/upload.svg'
-            alt='upload'
+            alt='upload' 
             width={40}
             height={40}
           />
