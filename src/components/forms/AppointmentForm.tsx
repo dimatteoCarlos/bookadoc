@@ -12,10 +12,7 @@ import FormSubmitButton from '../FormSubmitButton';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-// import { getAppointmentActionSchema } from '@/lib/validationsFormSchema';
-
 import { getAppointmentActionSchema } from '@/lib/validationFormSchema';
-import { getAppointmentSchema } from '@/lib/validationFormSchema';
 import DoctorSelectItem from '../DoctorSelectItem';
 import clsx from 'clsx';
 import { createAppointment } from '@/lib/actions/appointment.actions';
@@ -51,35 +48,11 @@ AppointmentFormPropType) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const formSchema = getAppointmentActionSchema(appointmentAction);
-  // const formSchema = getAppointmentSchema(appointmentAction);
-
-  // console.log(appointmentAction);
-
-  // console.log(
-  //   'buttonLabel:',
-  //   buttonLabels[appointmentAction],
-  //   'status:',
-  //   statusObj[appointmentAction]
-  // );
 
   const form = useForm<z.infer<typeof formSchema.validationSchema>>({
     resolver: zodResolver(formSchema.validationSchema),
 
-  // const form = useForm<z.infer<typeof formSchema>>({
-  //   resolver: zodResolver(formSchema),
-    /*//@ts-ignore
-     defaultValues: formSchema.defaultValues,*/
-
-    defaultValues: {
-      primaryPhysician: '',
-      schedule: new Date(Date.now()),
-      reason: '',
-      note: '',
-      cancellationReason: '',
-    },
-
-    // defaultValues: appointmentFormDefaultValues
-    // defaultValues: formSchema.defaultValues,
+    defaultValues: formSchema.defaultValues,
   });
   //------------------------
   const onSubmit = async (
@@ -100,21 +73,20 @@ AppointmentFormPropType) => {
           schedule: new Date(schedule),
           reason: reason!,
           note,
-          status: statusObj[appointmentAction] as StatusType, 
+          status: statusObj[appointmentAction] as StatusType,
           cancellationReason,
         };
 
         console.log('appointmentData:', appointmentData);
 
         const newAppointment = await createAppointment(appointmentData);
-        console.log("🚀 ~ newAppointment:", newAppointment)
-        
-
+        console.log('🚀 ~ newAppointment:', newAppointment);
 
         if (newAppointment) {
           form.reset();
           router.push(
-            `patients/${userId}/new-appointment/success?appointmentId=${newAppointment.$id}`
+            `/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.$id}`
+            // `/success?appointmentId=${newAppointment.$id}`
           );
         }
       }

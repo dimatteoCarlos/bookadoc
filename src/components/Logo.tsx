@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 export type LogoPropType = { logoPath: string };
-const Logo = ({ logoPath }: LogoPropType) => {
+const Logo = ({ logoPath = '/assets/icons/logo-full.svg'}: LogoPropType) => {
   return (
     <Link href={'/'}>
       <Image

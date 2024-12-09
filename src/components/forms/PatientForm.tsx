@@ -42,12 +42,16 @@ const PatientForm = () => {
       const user = { ...values };
 
       //test-----
-      const newUser = { ...user, $id: '674924718b8f09fa0443' };
-      console.log('newUser:', newUser);
-      if (true) {
+      // const newUser = { ...user, $id: '674924718b8f09fa0443' };
+      // console.log('newUser:', newUser);
+      // if (true) {
         //----------
-        // const newUser = await createUser(user);
-        // if (newUser) {
+
+        // VERIFICAR ANTES SI EL USUARIO Y EL EMAIL YA EXISTEN//
+
+        const newUser = await createUser(user);
+        
+        if (newUser) {
         router.push(`/patients/${newUser.$id}/register`);
       }
     } catch (error) {
@@ -67,7 +71,6 @@ const PatientForm = () => {
           <p className='text-dark-700'>Schedule your appointment.</p>
         </section>
 
-        {/* <div className='form__fields flex flex-col gap-4'> */}
         {/* Input full name */}
         <CustomFormField
           fieldCategory={FormFieldCategory.USER_INPUT}

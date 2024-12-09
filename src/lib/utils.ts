@@ -8,6 +8,8 @@ export function cn(...inputs: ClassValue[]) {
 export function parseStringify<T>(obj: T) {
   //stringify - Converts a JavaScript value to a JavaScript Object Notation (JSON) string.
   //parse - Converts a JavaScript Object Notation (JSON) string, into an object.
+
+  // console.log('desde utils>', JSON.parse(JSON.stringify(obj)))
   return JSON.parse(JSON.stringify(obj));
 }
 
@@ -26,7 +28,7 @@ export const convertFileToUrl = (file: File) => {
     'name:',
     file.name,
     'size:',
-    (file.size*Math.pow(1024,-2)).toFixed(2)+'MB' ,
+    (file.size * Math.pow(1024, -2)).toFixed(2) + 'MB',
     'type:',
     file.type,
     'lastModified:',
@@ -34,7 +36,6 @@ export const convertFileToUrl = (file: File) => {
   );
   return URL.createObjectURL(file);
 };
-
 
 
 

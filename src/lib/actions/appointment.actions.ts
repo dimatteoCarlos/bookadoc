@@ -1,15 +1,15 @@
-//CREATE APPWRITE APPOINTMENT 02:55:25
+//CREATE APPWRITE APPOINTMENT 02:56:25
 'use server';
 import { ID, Models } from 'node-appwrite';
 
 import {
-  BUCKET_ID,
   DATABASE_ID,
   databases_module,
-  ENDPOINT,
   APPOINTMENT_COLLECTION_ID,
+  ENDPOINT,
   PROJECT_ID,
   users_module,
+  BUCKET_ID,
 } from '../appwrite.config';
 import { parseStringify } from '../utils';
 
@@ -26,13 +26,14 @@ export const createAppointment = async (
       appointment
     );
 
-    // console.log(
-    //   'Reg Action parseStringify: ',
-    //   parseStringify<Models.Document>(newPatient)
-    // );
+    console.log('Reg Action parseStringify: ', newAppointment);
 
     return parseStringify<Models.Document>(newAppointment);
   } catch (error) {
     console.error(error);
   }
 };
+
+//------------
+
+//GET APPOINTMENT formatDateTime appointment.schedule .dateTime? que es asChild Buttno, variant outline

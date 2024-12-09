@@ -1,4 +1,4 @@
-//CREATE APPWRITE USER
+
 'use server';
 import { ID, Query, Models } from 'node-appwrite';
 import { InputFile } from 'node-appwrite/file';
@@ -15,6 +15,8 @@ import {
 } from '../appwrite.config';
 import { parseStringify } from '../utils';
 import { PatientType } from '@/types/appwrite.types';
+
+//CREATE APPWRITE USER
 
 export const createUser = async (user: CreateUserParamsType) => {
   console.log('execute crateUser');
@@ -36,6 +38,7 @@ export const createUser = async (user: CreateUserParamsType) => {
 
     return parseStringify(newuser);
   } catch (error: any) {
+    
     //Check existing user
 
     if (error) {

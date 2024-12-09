@@ -16,7 +16,6 @@ import { useRouter } from 'next/navigation';
 
 import { Doctors, IdentificationTypes } from '@/constants';
 
-// import { registerPatient } from "@/lib/actions/patient.actions";
 import { registerPatient } from '@/lib/actions/patient.actions';
 import { TitleForm } from '../TitleForm';
 import Image from 'next/image';
@@ -26,10 +25,7 @@ import FileUploader from '../FileUploader';
 const RegisterForm = ({ user }: { user?: UserType }) => {
   const { name = '', phone = '', email = '', $id = '' } = user || {};
 
-  console.log('id:', $id);
-
   if (!user) {
-  
     return <div>Loading...</div>;
   }
 
@@ -52,8 +48,9 @@ const RegisterForm = ({ user }: { user?: UserType }) => {
 
   // 2. Define a submit handler.
   const onSubmit = async (
-    //values: Es el parámetro de entrada de la función onSubmit, que representa los datos del formulario.
     //values: represents form data entered.
+
+    //VERIFICAR SI EL PATIENT YA ESTA REGISTRADO
     values: z.infer<typeof formSchemaValidation.validationSchema>
   ) => {
     setIsLoading(true);
@@ -65,6 +62,7 @@ const RegisterForm = ({ user }: { user?: UserType }) => {
       //
       console.log('ID:', values.identificationDocument);
       //Blob sintaxis is: new Blob(array, options), where optional options can be: type and/or endings.
+
       const blobFile = new Blob([values.identificationDocument[0]], {
         type: values.identificationDocument[0].type,
       });
@@ -72,16 +70,10 @@ const RegisterForm = ({ user }: { user?: UserType }) => {
       let formDataFileBlob = new FormData();
 
       formDataFileBlob.append('blobFile', blobFile);
+
       formDataFileBlob.append(
         'blobFileName',
         values.identificationDocument[0].name
-      );
-
-      console.log(
-        'VID:',
-        values.identificationDocument[0],
-        'formDataFileBlob:',
-        formDataFileBlob
       );
 
       try {
@@ -89,7 +81,9 @@ const RegisterForm = ({ user }: { user?: UserType }) => {
           ...values,
           userId: user.$id,
           birthDate: new Date(values.birthDate),
-          identificationDocument: values.identificationDocument //redundant since the if block already asked for the existance of identificationDocument
+
+//seems redundant since the if block already asked for the existance of identificationDocument
+          identificationDocument: values.identificationDocument 
             ? formDataFileBlob
             : undefined,
         } as RegisterUserParamsType;
@@ -104,6 +98,7 @@ const RegisterForm = ({ user }: { user?: UserType }) => {
         if (newPatient) {
           router.push(`/patients/${user.$id}/new-appointment`);
         }
+
       } catch (error) {
         console.log(error);
       }
