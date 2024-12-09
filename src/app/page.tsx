@@ -9,7 +9,7 @@ export default function Home() {
     <main className={'flex h-screen max-h-screen'}>
       {/* {isAdmin && <PassKeyModal/>} */}
 
-      <section className='remove-scrollbar container my-autox'>
+      <section className='remove-scrollbar container '>
         <div className='sub-container max-w-[496px] flex justify-between  items-start'>
           <Logo logoPath={'/assets/icons/logo-full.svg'}></Logo>
 

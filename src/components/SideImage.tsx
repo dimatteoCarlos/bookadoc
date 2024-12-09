@@ -2,7 +2,7 @@ import { getFileName } from '@/lib/utils';
 import Image from 'next/image';
 import React from 'react';
 
-type SideImagePropType = { imageUrl: string, className?:string};
+type SideImagePropType = { imageUrl: string; className?: string };
 
 const SideImage = ({ imageUrl, className }: SideImagePropType) => {
   return (
@@ -10,10 +10,9 @@ const SideImage = ({ imageUrl, className }: SideImagePropType) => {
       src={imageUrl}
       height={1000}
       width={1000}
-      className={`side-img md:block  max-w-[390px]X ${className}`}
+      className={`side-img md:block  ${className}`}
       alt={getFileName(imageUrl)}
     />
   );
 };
-
 export default SideImage;

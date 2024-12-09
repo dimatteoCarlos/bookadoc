@@ -2,7 +2,7 @@
 
 declare type SearchParamPropsType = {
   params: { [key: string]: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams?: { [key: string]: string | string[] | undefined };
 };
 
 declare type GenderType = 'male' | 'female' | 'other';

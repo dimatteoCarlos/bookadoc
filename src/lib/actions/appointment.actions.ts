@@ -1,7 +1,6 @@
 //CREATE APPWRITE APPOINTMENT 02:55:25
 'use server';
-import { ID, Query, Models } from 'node-appwrite';
-import { InputFile } from 'node-appwrite/file';
+import { ID, Models } from 'node-appwrite';
 
 import {
   BUCKET_ID,
@@ -13,7 +12,6 @@ import {
   users_module,
 } from '../appwrite.config';
 import { parseStringify } from '../utils';
-import NewAppointment from '../../app/patients/[userId]/new-appointment/page';
 
 export const createAppointment = async (
   appointment: CreateAppointmentParamsType

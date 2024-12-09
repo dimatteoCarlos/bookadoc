@@ -1,15 +1,17 @@
 import { z } from 'zod';
 
 //-------date time validation ------
-import { parse, isValid, setHours, setMinutes } from 'date-fns';
+import { format, isValid, setHours, setMinutes } from 'date-fns';
 const dateFormat = 'dd/MM/yyyy - h:mm a';
 
 const validateBusinessHours = (date: Date) => {
   const startOfDay = setHours(setMinutes(date, 0), 8); //8:00 am}
   const endOfDay = setHours(setMinutes(date, 0), 17); //5:00pm}
-  console.log(date, startOfDay, endOfDay);
-  return date >= startOfDay && endOfDay;
+  console.log('Business Hours:', date, startOfDay, endOfDay);
+  return date >= startOfDay && date <= endOfDay;
 };
+
+export const minAvailableDate = new Date(Date.now());
 
 export const UserFormValidation = z.object({
   name: z
@@ -133,17 +135,67 @@ export const PatientFormValidationObj = {
 
 export const CreateAppointmentSchema = z.object({
   primaryPhysician: z.string().min(2, 'Select at least one doctor'),
-  schedule: z.coerce.date(),
+  // schedule: z.coerce.date(),
 
-  // schedule: z.string().refine(
-  //   (val) => {
-  //     const parseDate = parse(val, dateFormat, new Date());
+  //---------------------------
 
-  //     //Comprabar si la fecha es valida y esta dentro del rango de horas
-  //     return isValid(parseDate) && validateBusinessHours(parseDate);
-  //   },
-  //   { message: 'Schedule must be between 8:00 am and 5:00 pm' }
-  // ),
+  schedule: z
+    .date()
+    .refine(
+      (val) => {
+        const parseDate = '';
+
+        console.log(
+          'parciales:',
+          val,
+          'string:',
+          val,
+          'dateFormat:',
+          dateFormat
+        );
+
+        // Verificar si la fecha es válida antes de hacer la validación adicional
+
+        if (!isValid(val)) {
+          console.log(val, ' is not valid date');
+          return false; //
+        }
+
+        //Comprabar si la fecha es valida y esta dentro del rango de horas
+
+        const result = isValid(val) && validateBusinessHours(val);
+
+        // console.log(
+        //   'parseDate:',
+        //   parseDate,
+        //   isValid(parseDate),
+        //   'result:',
+        //   result
+        // );
+        return result;
+      },
+
+      { message: 'Schedule must be between 8:00 am and 5:00 pm' }
+    )
+    .refine(
+      (val) => {
+        // console.log('val:', val, 'minDate:', minAvailableDate);
+
+        if (val < new Date(minAvailableDate)) {
+          // console.log('La fecha de schedule es anterior a la fecha de hoy');
+
+          return false;
+        }
+        return true;
+      },
+      {
+        message: `Schedule must not be earlier than earliest available date: ${format(
+          minAvailableDate,
+          'dd/MM/yyyy'
+        )}`,
+      }
+    ),
+  //---------------------------
 
   reason: z
     .string()
@@ -185,24 +237,48 @@ export function getAppointmentSchema(type: string) {
 
 // *******************
 
-// Esquema base con campos comunes
+// base schema with common fields
 const BaseAppointmentSchema = z.object({
   primaryPhysician: z.string().min(2, 'Select at least one doctor'),
 
-  schedule: z.coerce.date().refine(
-    (val) => {
-      const parseDate = parse(val.toISOString(), dateFormat, new Date());
-      // Verificar si la fecha es válida antes de hacer la validación adicional
+  //---------------------------
 
-      if (!isValid(parseDate)) {
-        return false; // Retornar `false` si la fecha es inválida
+  schedule: z
+    .date()
+    .refine(
+      (val) => {
+        // Verificar si la fecha es válida antes de hacer la validación adicional
+
+        if (!isValid(val)) {
+          console.log(val, ' is not a valid date');
+          return false; //
+        }
+
+        //Comprabar si la fecha es valida y esta dentro del rango de horas
+
+        const result = isValid(val) && validateBusinessHours(val);
+
+        return result;
+      },
+
+      { message: 'Schedule must be between 8:00 am and 5:00 pm' }
+    )
+    .refine(
+      (val) => {
+        if (val < new Date(minAvailableDate)) {
+          return false;
+        }
+        return true;
+      },
+      {
+        message: `Our availble dates are after : ${format(
+          minAvailableDate,
+          'dd/MM/yyyy'
+        )}`,
       }
+    ),
+  //---------------------------
 
-      //Comprabar si la fecha es valida y esta dentro del rango de horas
-      return isValid(parseDate) && validateBusinessHours(parseDate);
-    },
-    { message: 'Schedule must be between 8:00 am and 5:00 pm' }
-  ),
   note: z.string().optional(),
   cancellationReason: z.string().optional(),
 });

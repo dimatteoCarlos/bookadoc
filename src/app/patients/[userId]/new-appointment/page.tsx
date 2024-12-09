@@ -16,16 +16,17 @@ const NewAppointment = async ({
 
   const user = await getUser(userId);
 
-  console.log(
-    typeof searchParams,
-    await searchParams,
-    'userId:',
-    userId,
-    user,
-    patientInfo
-  );
+  // console.log(
+  //   typeof searchParams,
+  //   await searchParams,
+  //   'userId:',
+  //   userId,
+  //   user,
+  //   patientInfo
+  // );
 
   //appointmentAction: create, cancel, update
+
   return (
     <main className='h-screen flex max-h-screen '>
       <section className='remove-scrollbar container'>
@@ -35,7 +36,7 @@ const NewAppointment = async ({
           <AppointmentForm
             appointmentAction='create'
             userId={userId}
-            patientId={patientInfo.$id}
+            patientId={patientInfo!.$id}
           />
 
           <Footer />
@@ -43,7 +44,8 @@ const NewAppointment = async ({
       </section>
 
       <SideImage
-        imageUrl='/assets/images/appointment-img-2.png'
+        imageUrl='/assets/images/appointment-img-orig.png'
+        // imageUrl='/assets/images/appointment-img-2.png'
         className='max-w-[40%]'
       />
     </main>
@@ -51,9 +53,3 @@ const NewAppointment = async ({
 };
 
 export default NewAppointment;
-
-//logo/title/p Request a new appointment in 10 seconds. .Doctr searchIcon select. . label/textarea label/textarea Reason for appointment ex: Annual monthly check-up.  Additional comments/notes. ex:Prefer afternoon appointments, if possible
-
-//Expected appointment date. calendarIcon Datepicker time showing Select you appointment date
-
-// Submit and continue

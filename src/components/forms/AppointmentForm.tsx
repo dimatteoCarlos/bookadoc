@@ -15,9 +15,24 @@ import { useRouter } from 'next/navigation';
 // import { getAppointmentActionSchema } from '@/lib/validationsFormSchema';
 
 import { getAppointmentActionSchema } from '@/lib/validationFormSchema';
+import { getAppointmentSchema } from '@/lib/validationFormSchema';
 import DoctorSelectItem from '../DoctorSelectItem';
 import clsx from 'clsx';
 import { createAppointment } from '@/lib/actions/appointment.actions';
+
+const statusObj = {
+  cancel: 'cancelled',
+  schedule: 'scheduled',
+  create: 'pending',
+  default: 'pending',
+};
+
+const buttonLabels = {
+  cancel: 'Cancel Appointment',
+  schedule: 'Schedule Appointment',
+  create: 'Submit Appointment',
+  default: 'Submit Appointment',
+};
 
 export type AppointmentFormPropType = {
   userId: string;
@@ -31,42 +46,33 @@ const AppointmentForm = ({
   appointmentAction,
 }: // appointment,
 // setOpen,
+
 AppointmentFormPropType) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const formSchema = getAppointmentActionSchema(appointmentAction);
+  // const formSchema = getAppointmentSchema(appointmentAction);
 
-  console.log(appointmentAction);
+  // console.log(appointmentAction);
 
-  const statusObj = {
-    cancel: 'cancelled',
-    schedule: 'scheduled',
-    create: 'pending',
-    default: 'pending',
-  };
-
-  const buttonLabels = {
-    cancel: 'Cancel Appointment',
-    schedule: 'Schedule Appointment',
-    create: 'Submit Appointment',
-    default: 'Submit Appointment',
-  };
-
-  console.log(
-    'buttonLabel:',
-    buttonLabels[appointmentAction],
-    'status:',
-    statusObj[appointmentAction]
-  );
+  // console.log(
+  //   'buttonLabel:',
+  //   buttonLabels[appointmentAction],
+  //   'status:',
+  //   statusObj[appointmentAction]
+  // );
 
   const form = useForm<z.infer<typeof formSchema.validationSchema>>({
     resolver: zodResolver(formSchema.validationSchema),
+
+  // const form = useForm<z.infer<typeof formSchema>>({
+  //   resolver: zodResolver(formSchema),
     /*//@ts-ignore
      defaultValues: formSchema.defaultValues,*/
 
     defaultValues: {
       primaryPhysician: '',
-      schedule: new Date(),
+      schedule: new Date(Date.now()),
       reason: '',
       note: '',
       cancellationReason: '',
@@ -75,8 +81,9 @@ AppointmentFormPropType) => {
     // defaultValues: appointmentFormDefaultValues
     // defaultValues: formSchema.defaultValues,
   });
-//------------------------
+  //------------------------
   const onSubmit = async (
+    // values: z.infer<typeof formSchema>
     values: z.infer<typeof formSchema.validationSchema>
   ) => {
     setIsLoading(true);
@@ -91,18 +98,25 @@ AppointmentFormPropType) => {
           patient: patientId,
           primaryPhysician,
           schedule: new Date(schedule),
-          reason:reason!,
+          reason: reason!,
           note,
+          status: statusObj[appointmentAction] as StatusType, 
           cancellationReason,
-          status: statusObj[appointmentAction] as StatusType,
         };
-        console.log(appointmentData);
 
-        const appointment = await createAppointment(appointmentData);
+        console.log('appointmentData:', appointmentData);
+
+        const newAppointment = await createAppointment(appointmentData);
+        console.log("🚀 ~ newAppointment:", newAppointment)
+        
 
 
-        //if app reset router push /patients/${userId}new-appointment siccess?appointmentId=${appointment.id}
-
+        if (newAppointment) {
+          form.reset();
+          router.push(
+            `patients/${userId}/new-appointment/success?appointmentId=${newAppointment.$id}`
+          );
+        }
       }
     } catch (error) {
       console.error(error);

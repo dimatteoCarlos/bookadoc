@@ -17,19 +17,24 @@ import { useRouter } from 'next/navigation';
 import { Doctors, IdentificationTypes } from '@/constants';
 
 // import { registerPatient } from "@/lib/actions/patient.actions";
-import { createUser, registerPatient } from '@/lib/actions/patient.actions';
+import { registerPatient } from '@/lib/actions/patient.actions';
 import { TitleForm } from '../TitleForm';
 import Image from 'next/image';
 import FileUploader from '../FileUploader';
 
 //----------------------------
-const RegisterForm = ({ user }: { user: UserType }) => {
-  const { name, phone, email, $id } = user;
+const RegisterForm = ({ user }: { user?: UserType }) => {
+  const { name = '', phone = '', email = '', $id = '' } = user || {};
 
   console.log('id:', $id);
 
+  if (!user) {
+  
+    return <div>Loading...</div>;
+  }
+
   //-------------------
-  //Create validation schema
+  //Define validation schema
   const formSchemaValidation = PatientFormValidationObj;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -48,6 +53,7 @@ const RegisterForm = ({ user }: { user: UserType }) => {
   // 2. Define a submit handler.
   const onSubmit = async (
     //values: Es el parámetro de entrada de la función onSubmit, que representa los datos del formulario.
+    //values: represents form data entered.
     values: z.infer<typeof formSchemaValidation.validationSchema>
   ) => {
     setIsLoading(true);

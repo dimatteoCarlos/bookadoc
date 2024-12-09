@@ -14,6 +14,7 @@ import {
   users_module,
 } from '../appwrite.config';
 import { parseStringify } from '../utils';
+import { PatientType } from '@/types/appwrite.types';
 
 export const createUser = async (user: CreateUserParamsType) => {
   console.log('execute crateUser');
@@ -57,8 +58,11 @@ export const createUser = async (user: CreateUserParamsType) => {
 export async function getUser(userId: string) {
   try {
     const user = await users_module.get(userId);
-    console.log('user:', user);
-    return parseStringify(user);
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+    // console.log('user:', user);
+    return parseStringify(user) as UserType;
   } catch (error) {
     console.error(
       'An error occurred while retrieving the user details:',
@@ -158,11 +162,9 @@ export async function getPatient(userId: string) {
       ]
     );
 
-    return parseStringify(patientDocuments.documents[0]);
-
+    return parseStringify(patientDocuments.documents[0]) as PatientType;
   } catch (error) {
-    
-    console.error(
+    console.log(
       'An error occurred while retrieving the patient documents of ',
       userId,
       ' ',

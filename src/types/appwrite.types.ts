@@ -1,12 +1,4 @@
-//El módulo `Models` organiza los tipos de datos que Appwrite usa para representar usuarios, documentos, archivos, bases de datos, sesiones, equipos, y más. Estos modelos son esenciales para manejar las respuestas de las APIs de manera estructurada, especialmente en proyectos TypeScript. 
 
-//#### **3. `Document`**Representa un documento almacenado en una colección.
-/*- **Campos principales:**
-  - `$id`: ID único del documento.
-  - `$collectionId`: ID de la colección a la que pertenece.
-  - `$databaseId`: ID de la base de datos.
-  - `data`: Objeto con los datos del documento.
-*/
 
 
 import { Models } from "node-appwrite";
@@ -18,7 +10,7 @@ export interface PatientType extends Models.Document {
   email: string;
   phone: string;
   birthDate: Date;
-  gender: Gender;
+  gender: GenderType;
   address: string;
   occupation: string;
   emergencyContactName: string;
@@ -39,10 +31,20 @@ export interface PatientType extends Models.Document {
 export interface AppointmentType extends Models.Document {
   patient: PatientType;
   schedule: Date;
-  status: Status;
+  status: StatusType;
   primaryPhysician: string;
   reason: string;
   note: string;
   userId: string;
   cancellationReason: string | null;
 }
+
+//El módulo `Models` organiza los tipos de datos que Appwrite usa para representar usuarios, documentos, archivos, bases de datos, sesiones, equipos, y más. Estos modelos son esenciales para manejar las respuestas de las APIs de manera estructurada, especialmente en proyectos TypeScript. 
+
+//#### **3. `Document`**Representa un documento almacenado en una colección.
+/*- **Campos principales:**
+  - `$id`: ID único del documento.
+  - `$collectionId`: ID de la colección a la que pertenece.
+  - `$databaseId`: ID de la base de datos.
+  - `data`: Objeto con los datos del documento.
+*/
