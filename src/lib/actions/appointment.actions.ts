@@ -37,3 +37,20 @@ export const createAppointment = async (
 //------------
 
 //GET APPOINTMENT formatDateTime appointment.schedule .dateTime? que es asChild Buttno, variant outline
+export async function getAppointment(documentId: string) {
+  try {
+    const document = await databases_module.getDocument(
+      DATABASE_ID!,
+      APPOINTMENT_COLLECTION_ID!,
+      documentId
+    );
+    return parseStringify(document);
+  } catch (error) {
+    console.error(
+      `error occurred while getting the appointment document:, ${documentId}`,
+      error
+    );
+
+    // throw new Error('could not get the document');
+  }
+}

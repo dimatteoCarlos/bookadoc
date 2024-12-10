@@ -6,6 +6,7 @@ import './globals.css';
 // import { Inter } from 'next/font/google';
 import { Plus_Jakarta_Sans as FontSans } from 'next/font/google';
 import { cn } from '@/lib/utils';
+import Footer from '@/components/Footer';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -44,6 +45,8 @@ export default function RootLayout({
             // disableTransitionOnChange
           >
             {children}
+            
+          {/* <Footer /> */}
             
           </ThemeProvider>
         </body>

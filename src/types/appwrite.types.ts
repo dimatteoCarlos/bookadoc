@@ -48,3 +48,5 @@ export interface AppointmentType extends Models.Document {
   - `$databaseId`: ID de la base de datos.
   - `data`: Objeto con los datos del documento.
 */
+
+

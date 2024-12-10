@@ -99,12 +99,7 @@ export const registerPatient = async ({
   try {
     // Upload file ->  // https://appwrite.io/docs/references/cloud/client-web/storage#createFile
     let fileUploaded;
-    // console.log(
-    //   'type of ID:',
-    //   typeof identificationDocument,
-    //   'ID:',
-    //   identificationDocument
-    // );
+
 
     if (identificationDocument) {
       //sintaxis of InputFile from appwrite: The InputFile class in the Appwrite Node.js SDK is a file object used to represent a file that is going to be uploaded
