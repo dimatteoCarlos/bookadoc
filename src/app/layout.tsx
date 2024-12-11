@@ -6,7 +6,6 @@ import './globals.css';
 // import { Inter } from 'next/font/google';
 import { Plus_Jakarta_Sans as FontSans } from 'next/font/google';
 import { cn } from '@/lib/utils';
-import Footer from '@/components/Footer';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -16,7 +15,7 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: 'Book_a_Doc | management system',
+  title: 'Book_a_Doc | appointment scheduler',
   description:
     'A patient management system simplifying patient registration, appointment scheduling, and medical  records for healthcare providers.',
   icons: { icon: '/assets/icons/logo-icon.svg' },
@@ -34,7 +33,7 @@ export default function RootLayout({
         <head />
         <body
           className={cn(
-            'h-screen min-h-screen  bg-dark-300 font-sans antialiased bg-background',
+            '  bg-dark-300 font-sans antialiased bg-background  h-screen max-h-screen relative ',
             fontSans.className
           )}
         >
@@ -45,9 +44,7 @@ export default function RootLayout({
             // disableTransitionOnChange
           >
             {children}
-            
-          {/* <Footer /> */}
-            
+
           </ThemeProvider>
         </body>
       </html>

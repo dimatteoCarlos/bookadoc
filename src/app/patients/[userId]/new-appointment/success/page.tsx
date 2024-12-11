@@ -1,4 +1,6 @@
 ///app/patients/[userid]/new-appointment/success/page.tsx
+//example url: http://localhost:3000/patients/675720cecbf362041d3f/new-appointment/success?appointmentId=6757316d002a41bebf75
+
 'use server';
 import Logo from '@/components/Logo';
 import { Doctors } from '@/constants';
@@ -8,13 +10,12 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Footer from '@/components/Footer';
 
-//----------------test
-import { buttonVariants } from '@/components/ui/button';
+// import { buttonVariants } from '@/components/ui/button';
 import { getAppointment } from '@/lib/actions/appointment.actions';
 
 const Success = async ({ params, searchParams }: SearchParamPropsType) => {
-  const { userId } = await params;
-  const awaitedSearchParams = await searchParams;
+  const { userId } = await params; // this is necessary in next js 14
+  const awaitedSearchParams = await searchParams; // this is necessary in next js 14
 
   const appointmentId = (awaitedSearchParams?.appointmentId as string) || '';
   const appointmentDocument = await getAppointment(appointmentId);
@@ -27,7 +28,7 @@ const Success = async ({ params, searchParams }: SearchParamPropsType) => {
 
   return (
     <>
-      <div className='flex h-screen max-h-screen px-[5%] '>
+      <div className='flex  px-[5%] h-screen max-h-screen border-red-800 border-'>
         <div className='success-img'>
           <Logo logoPath={'/assets/icons/logo-full.svg'} />
 
@@ -55,7 +56,7 @@ const Success = async ({ params, searchParams }: SearchParamPropsType) => {
                     alt='doctor'
                     width={100}
                     height={100}
-                    className='size-6'
+                    className='size-10'
                   />
                   <p className='whitespace-nowrap'>Dr. {doctor?.name}</p>
                 </>
@@ -73,12 +74,16 @@ const Success = async ({ params, searchParams }: SearchParamPropsType) => {
             </div>
           </section>
           {/* The asChild parameter can be set to nest a link component. */}
-          <Button variant='outline' className='shad-primary-btn' asChild>
-            <Link href={`/patients/${userId}/new-appointment`}>
-              New Appoinment
-            </Link>
-          </Button>
 
+          <section className='flex flex-col items-center  w-full gap-10'>
+            <Button variant='outline' className='shad-primary-btn' asChild>
+              <Link href={`/patients/${userId}/new-appointment`}>
+                New Appoinment
+              </Link>
+            </Button>
+
+            <Footer />
+          </section>
           {/* The buttonVariants helper can be used to create a link that looks like a button. */}
           {/* <Link
             href={`/patients/${userId}/new-appointment`}
@@ -86,8 +91,6 @@ const Success = async ({ params, searchParams }: SearchParamPropsType) => {
           >
             New Appoinment
           </Link> */}
-
-          <Footer />
         </div>
       </div>
     </>

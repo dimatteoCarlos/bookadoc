@@ -6,10 +6,10 @@ import {
   DATABASE_ID,
   databases_module,
   APPOINTMENT_COLLECTION_ID,
-  ENDPOINT,
-  PROJECT_ID,
-  users_module,
-  BUCKET_ID,
+  // ENDPOINT,
+  // PROJECT_ID,
+  // users_module,
+  // BUCKET_ID,
 } from '../appwrite.config';
 import { parseStringify } from '../utils';
 
@@ -36,7 +36,7 @@ export const createAppointment = async (
 
 //------------
 
-//GET APPOINTMENT formatDateTime appointment.schedule .dateTime? que es asChild Buttno, variant outline
+//GET APPOINTMENT
 export async function getAppointment(documentId: string) {
   try {
     const document = await databases_module.getDocument(
@@ -50,7 +50,5 @@ export async function getAppointment(documentId: string) {
       `error occurred while getting the appointment document:, ${documentId}`,
       error
     );
-
-    // throw new Error('could not get the document');
   }
 }

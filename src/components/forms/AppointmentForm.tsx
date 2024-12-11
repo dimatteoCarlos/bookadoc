@@ -16,7 +16,7 @@ import { getAppointmentActionSchema } from '@/lib/validationFormSchema';
 import DoctorSelectItem from '../DoctorSelectItem';
 import clsx from 'clsx';
 import { createAppointment } from '@/lib/actions/appointment.actions';
-
+//-----------------------
 const statusObj = {
   cancel: 'cancelled',
   schedule: 'scheduled',
@@ -30,7 +30,7 @@ const buttonLabels = {
   create: 'Submit Appointment',
   default: 'Submit Appointment',
 };
-
+//---------------------
 export type AppointmentFormPropType = {
   userId: string;
   patientId: string;
@@ -84,9 +84,8 @@ AppointmentFormPropType) => {
 
         if (newAppointment) {
           form.reset();
-          router.push(
+          router.replace(
             `/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.$id}`
-            // `/success?appointmentId=${newAppointment.$id}`
           );
         }
       }

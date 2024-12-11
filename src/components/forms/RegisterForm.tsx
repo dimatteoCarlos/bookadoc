@@ -50,7 +50,7 @@ const RegisterForm = ({ user }: { user?: UserType }) => {
   const onSubmit = async (
     //values: represents form data entered.
 
-    //VERIFICAR SI EL PATIENT YA ESTA REGISTRADO
+    //VERIFICATION OF PATIENT TO BE ADDED HERE
     values: z.infer<typeof formSchemaValidation.validationSchema>
   ) => {
     setIsLoading(true);
@@ -60,7 +60,8 @@ const RegisterForm = ({ user }: { user?: UserType }) => {
       values.identificationDocument?.length > 0
     ) {
       //
-      console.log('ID:', values.identificationDocument);
+      // console.log('ID:', values.identificationDocument);
+
       //Blob sintaxis is: new Blob(array, options), where optional options can be: type and/or endings.
 
       const blobFile = new Blob([values.identificationDocument[0]], {
@@ -82,23 +83,22 @@ const RegisterForm = ({ user }: { user?: UserType }) => {
           userId: user.$id,
           birthDate: new Date(values.birthDate),
 
-//seems redundant since the if block already asked for the existance of identificationDocument
-          identificationDocument: values.identificationDocument 
+          //seems redundant since the if block already asked for the existance of identificationDocument
+          identificationDocument: values.identificationDocument
             ? formDataFileBlob
             : undefined,
         } as RegisterUserParamsType;
 
-        console.log('patientInfo:', patientInfo);
+        // console.log('patientInfo:', patientInfo);
 
-        //
         const newPatient = await registerPatient(patientInfo);
 
-        console.log('newPatient:', newPatient);
+        // console.log('newPatient:', newPatient);
 
         if (newPatient) {
-          router.push(`/patients/${user.$id}/new-appointment`);
+          // router.push(`/patients/${user.$id}/new-appointment`);
+          router.replace(`/patients/${user.$id}/new-appointment`); //test
         }
-
       } catch (error) {
         console.log(error);
       }
@@ -383,3 +383,9 @@ const RegisterForm = ({ user }: { user?: UserType }) => {
 };
 
 export default RegisterForm;
+
+
+
+
+
+

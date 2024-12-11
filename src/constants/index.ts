@@ -60,3 +60,17 @@ export const StatusIcon: { [key: string]: string } = {
   pending: '/assets/icons/pending.svg',
   cancelled: '/assets/icons/cancelled.svg',
 };
+
+export const statusObj = {
+  cancel: 'cancelled',
+  schedule: 'scheduled',
+  create: 'pending',
+  default: 'pending',
+};
+
+export const buttonLabels = {
+  cancel: 'Cancel Appointment',
+  schedule: 'Schedule Appointment',
+  create: 'Submit Appointment',
+  default: 'Submit Appointment',
+};
