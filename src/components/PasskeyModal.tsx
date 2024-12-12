@@ -13,32 +13,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 
-import { decryptKey, encryptKey } from '@/lib/utils';
+import {
+  decryptKey,
+  encryptKey,
+  isLocalStorageAvailable,
+  getEncryptedKey,
+} from '@/lib/utils';
 
-// Función para verificar la disponibilidad de localStorage
-const isLocalStorageAvailable = () => {
-  try {
-    return typeof window !== 'undefined' && window.localStorage;
-  } catch (err) {
-    console.error('Error checking localStorage availability:', err);
-    return false;
-  }
-};
-
-// Función para obtener la clave cifrada desde localStorage
-const getEncryptedKey = () => {
-  if (isLocalStorageAvailable()) {
-    return window.localStorage.getItem('accessKey');
-  }
-  console.warn('localStorage is not available');
-  return null;
-};
 //----------------------------------------
 export const PasskeyModal = () => {
   const router = useRouter();
@@ -46,9 +34,10 @@ export const PasskeyModal = () => {
   const [open, setOpen] = useState(false);
   const [passkey, setPasskey] = useState('');
   const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [encryptedKey, setEncryptedKey] = useState<string | null>(null);
 
-  // Verifica si la clave cifrada está disponible y es válida
+  // Verifica al inicio, si la clave cifrada está disponible y es válida, y la asigna al estado
   useEffect(() => {
     const key = getEncryptedKey();
     if (key) {
@@ -58,17 +47,17 @@ export const PasskeyModal = () => {
     }
   }, []);
 
-  // Este useEffect se ejecuta cuando se actualiza `encryptedKey`
+  // Este useEffect se ejecuta cuando se actualiza `encryptedKey` o path
   useEffect(() => {
     if (!encryptedKey) return;
 
     try {
       const accessKey = decryptKey(encryptedKey);
-      console.log('Decrypted accessKey:', accessKey);
+      // console.log('Decrypted accessKey:', accessKey);
 
       if (accessKey === process.env.NEXT_PUBLIC_ADMIN_PASSKEY?.toString()) {
         setOpen(false);
-        setError('passkey accepted access granted'); //mejorar con un success message
+        setSuccessMsg('passkey accepted access granted'); //mejorar con un success message
         console.log('passkey accepted and access granted');
         router.replace('/admin'); // Redirigir si la clave es correcta
       } else {
@@ -84,6 +73,7 @@ export const PasskeyModal = () => {
       }
     }
   }, [encryptedKey, path]);
+
   //-------------
   const closeModal = () => {
     setOpen(false);
@@ -124,6 +114,8 @@ export const PasskeyModal = () => {
     }
   };
 
+  //---------------------
+
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent className='shad-alert-dialog'>
@@ -162,6 +154,11 @@ export const PasskeyModal = () => {
           {error && (
             <p className='shad-error text-14-regular mt-4 flex justify-center'>
               {error}
+            </p>
+          )}
+          {successMsg && (
+            <p className='shad-success text-14-regular mt-4 flex justify-center'>
+              {successMsg}
             </p>
           )}
         </div>

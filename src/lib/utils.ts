@@ -112,3 +112,25 @@ export function encryptKey(passkey: string) {
 export function decryptKey(passkey: string) {
   return atob(passkey);
 }
+
+//------------------------
+// Función para verificar la disponibilidad de localStorage
+export const isLocalStorageAvailable = () => {
+  try {
+    return typeof window !== 'undefined' && window.localStorage;
+  } catch (err) {
+    console.error('Error checking localStorage availability:', err);
+    return false;
+  }
+};
+
+// Función para obtener la clave cifrada desde localStorage
+export const getEncryptedKey = () => {
+  if (isLocalStorageAvailable()) {
+    return window.localStorage.getItem('accessKey');
+  }
+  console.warn('localStorage is not available');
+  return null;
+};
+
+//------------------------

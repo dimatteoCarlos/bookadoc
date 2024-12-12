@@ -1,3 +1,5 @@
+//app/register/page.tsx
+
 'use server';
 
 import Footer from '@/components/Footer';
@@ -16,11 +18,13 @@ const Register = async ({ params, ...searchParams }: SearchParamPropsType) => {
     <main className='h-screen flex max-h-screen '>
       <section className='remove-scrollbar container'>
         <div className='sub-container max-w-[860px] flex-1 flex-col py-10'>
+
           <Logo logoPath={'/assets/icons/logo-full.svg'} />
 
           <RegisterForm user={user!} />
 
           <Footer />
+          
         </div>
       </section>
 

@@ -54,23 +54,52 @@ export const Doctors: { image: string; name: string }[] = [
     name: 'Terry Boyle',
   },
 ];
-
-export const StatusIcon: { [key: string]: string } = {
-  scheduled: '/assets/icons/check.svg',
-  pending: '/assets/icons/pending.svg',
-  cancelled: '/assets/icons/cancelled.svg',
-};
-
-export const statusObj = {
-  cancel: 'cancelled',
-  schedule: 'scheduled',
-  create: 'pending',
-  default: 'pending',
-};
-
 export const buttonLabels = {
   cancel: 'Cancel Appointment',
   schedule: 'Schedule Appointment',
   create: 'Submit Appointment',
   default: 'Submit Appointment',
 };
+
+export const StatusIcon: { [key: string]: string } = {
+  total: '/assets/icons/calendar.svg',
+  scheduled: '/assets/icons/appointments.svg',
+  pending: '/assets/icons/pending.svg',
+  cancelled: '/assets/icons/cancelled.svg',
+};
+
+export const statusObj: { [key: string]: StatusType | 'all' } = {
+  cancel: 'cancelled',
+  schedule: 'scheduled',
+  create: 'pending',
+  default: 'pending',
+  total: 'all',
+};
+//----------------
+
+export const statCards = [
+  // {
+  //   status: statusObj.total,
+  //   count: 0,
+  //   label: 'Total appointments',
+  //   icon: StatusIcon.total,
+  // },
+  // {
+  //   status: statusObj.schedule,
+  //   count: 0,
+  //   label: 'Scheduled appointments',
+  //   icon: StatusIcon.scheduled,
+  // },
+  // {
+  //   status: statusObj.create,
+  //   count: 0,
+  //   label: 'Pending appointments',
+  //   icon: StatusIcon.pending,
+  // },
+  {
+    status: statusObj.cancel,
+    count: 0,
+    label: 'Cancelled appointments',
+    icon: StatusIcon.cancelled,
+  },
+];

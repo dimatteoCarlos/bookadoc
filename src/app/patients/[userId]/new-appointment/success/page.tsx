@@ -1,4 +1,5 @@
 ///app/patients/[userid]/new-appointment/success/page.tsx
+
 //example url: http://localhost:3000/patients/675720cecbf362041d3f/new-appointment/success?appointmentId=6757316d002a41bebf75
 
 'use server';

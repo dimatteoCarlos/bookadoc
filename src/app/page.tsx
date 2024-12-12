@@ -1,3 +1,7 @@
+//app/page.tsx
+
+'use server';
+
 import Logo from '@/components/Logo';
 import Image from 'next/image';
 import Footer from '@/components/Footer';
@@ -5,14 +9,14 @@ import PatientForm from '@/components/forms/PatientForm';
 import { PasskeyModal } from '@/components/PasskeyModal';
 
 export default async function Home({ searchParams }: SearchParamPropsType) {
-  const awaitedSearchParams = await searchParams
-  
+  const awaitedSearchParams = await searchParams;
+
   const isAdmin = awaitedSearchParams?.admin === 'true';
   console.log('awaitedSearchParams:', awaitedSearchParams);
 
   return (
     <main className={'flex h-screen max-h-screen'}>
-      {isAdmin && <PasskeyModal/>}
+      {isAdmin && <PasskeyModal />}
 
       <section className='remove-scrollbar container '>
         <div className='sub-container max-w-[496px] flex justify-between  items-start'>

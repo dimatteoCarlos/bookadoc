@@ -131,110 +131,6 @@ export const PatientFormValidationObj = {
   defaultValues: PatientFormDefaultValues,
 };
 
-//-------------
-
-// export const CreateAppointmentSchema = z.object({
-//   primaryPhysician: z.string().min(2, 'Select at least one doctor'),
-//   // schedule: z.coerce.date(),
-
-//   //---------------------------
-
-//   schedule: z
-//     .date()
-//     .refine(
-//       (val) => {
-//         const parseDate = '';
-
-//         console.log(
-//           'parciales:',
-//           val,
-//           'string:',
-//           val,
-//           'dateFormat:',
-//           dateFormat
-//         );
-
-//         // Verificar si la fecha es válida antes de hacer la validación adicional
-
-//         if (!isValid(val)) {
-//           console.log(val, ' is not valid date');
-//           return false; //
-//         }
-
-//         //Comprabar si la fecha es valida y esta dentro del rango de horas
-
-//         const result = isValid(val) && validateBusinessHours(val);
-
-//         // console.log(
-//         //   'parseDate:',
-//         //   parseDate,
-//         //   isValid(parseDate),
-//         //   'result:',
-//         //   result
-//         // );
-//         return result;
-//       },
-
-//       { message: 'Schedule must be between 8:00 am and 5:00 pm' }
-//     )
-//     .refine(
-//       (val) => {
-//         // console.log('val:', val, 'minDate:', minAvailableDate);
-
-//         if (val < new Date(minAvailableDate)) {
-//           // console.log('La fecha de schedule es anterior a la fecha de hoy');
-
-//           return false;
-//         }
-//         return true;
-//       },
-//       {
-//         message: `Schedule must not be earlier than earliest available date: ${format(
-//           minAvailableDate,
-//           'dd/MM/yyyy'
-//         )}`,
-//       }
-//     ),
-//   //---------------------------
-
-//   reason: z
-//     .string()
-//     .min(2, 'Reason must be at least 2 characters')
-//     .max(500, 'Reason must be at most 500 characters'),
-//   note: z.string().optional(),
-//   cancellationReason: z.string().optional(),
-// });
-
-// export const ScheduleAppointmentSchema = z.object({
-//   primaryPhysician: z.string().min(2, 'Select at least one doctor'),
-//   schedule: z.coerce.date(),
-//   reason: z.string().optional(),
-//   note: z.string().optional(),
-//   cancellationReason: z.string().optional(),
-// });
-
-// export const CancelAppointmentSchema = z.object({
-//   primaryPhysician: z.string().min(2, 'Select at least one doctor'),
-//   schedule: z.coerce.date(),
-//   reason: z.string().optional(),
-//   note: z.string().optional(),
-//   cancellationReason: z
-//     .string()
-//     .min(2, 'Reason must be at least 2 characters')
-//     .max(500, 'Reason must be at most 500 characters'),
-// });
-
-// export function getAppointmentSchema(type: string) {
-//   switch (type) {
-//     case 'create':
-//       return CreateAppointmentSchema;
-//     case 'cancel':
-//       return CancelAppointmentSchema;
-//     default:
-//       return ScheduleAppointmentSchema;
-//   }
-// }
-
 // *******************
 
 // base schema with common fields
@@ -283,18 +179,18 @@ const BaseAppointmentSchema = z.object({
   cancellationReason: z.string().optional(),
 });
 
-export const CreateAppointmentSchemaII = BaseAppointmentSchema.extend({
+export const CreateAppointmentSchema = BaseAppointmentSchema.extend({
   reason: z
     .string()
     .min(2, 'Reason must be at least 2 characters')
     .max(500, 'Reason must be at most 500 characters'),
 });
 
-export const ScheduleAppointmentSchemaII = BaseAppointmentSchema.extend({
+export const ScheduleAppointmentSchema = BaseAppointmentSchema.extend({
   reason: z.string().optional(),
 });
 
-export const CancelAppointmentSchemaII = BaseAppointmentSchema.extend({
+export const CancelAppointmentSchema = BaseAppointmentSchema.extend({
   reason: z.string().optional(),
   cancellationReason: z
     .string()
@@ -320,16 +216,15 @@ export const appointmentFormDefaultValues = {
 
 export function getAppointmentActionSchema(type: AppointmentActionType) {
   const schemaAppointmentAction = {
-    create: CreateAppointmentSchemaII,
-    cancel: CancelAppointmentSchemaII,
-    schedule: ScheduleAppointmentSchemaII,
+    create: CreateAppointmentSchema,
+    cancel: CancelAppointmentSchema,
+    schedule: ScheduleAppointmentSchema,
   };
 
   const result = {
     validationSchema: schemaAppointmentAction[type],
     defaultValues: appointmentFormDefaultValues,
   };
+
   return result;
 }
-
-

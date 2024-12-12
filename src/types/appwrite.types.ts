@@ -26,7 +26,7 @@ export interface PatientType extends Models.Document {
   privacyConsent: boolean;
 }
 
-export declare interface AppointmentType extends Models.Document {
+export declare type AppointmentType=Models.Document &  {
   patient: PatientType;
   schedule: Date;
   status: StatusType;
@@ -36,8 +36,6 @@ export declare interface AppointmentType extends Models.Document {
   userId: string;
   cancellationReason: string | null;
 }
-
-
 
 
 //El módulo `Models` organiza los tipos de datos que Appwrite usa para representar usuarios, documentos, archivos, bases de datos, sesiones, equipos, y más. Estos modelos son esenciales para manejar las respuestas de las APIs de manera estructurada, especialmente en proyectos TypeScript.
