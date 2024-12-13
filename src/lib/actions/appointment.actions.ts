@@ -61,15 +61,17 @@ type Counts = {
   cancelled: number;
 };
 
-let countByStatus: Counts = {
-  scheduled: 0,
-  pending: 0,
-  cancelled: 0,
-};
 
 //GET RECENT APPOINTMENTS
 
 export const getRecentAppointmentList = async () => {
+  
+  let countByStatus: Counts = {
+    scheduled: 0,
+    pending: 0,
+    cancelled: 0,
+  };
+  
   try {
     /* The response for a - listDocuments of database appwrite - request with a query will contain:
         total: The total number of matching documents in the collection (ignoring pagination).

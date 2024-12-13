@@ -10,7 +10,7 @@ type StatCardPropsType = {
 };
 
 const StatCard = ({ status, count = 0, label, icon }: StatCardPropsType) => {
-  console.log({ status, count, label, icon });
+
 
   return (
     <div

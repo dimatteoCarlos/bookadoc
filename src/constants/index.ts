@@ -54,6 +54,7 @@ export const Doctors: { image: string; name: string }[] = [
     name: 'Terry Boyle',
   },
 ];
+
 export const buttonLabels = {
   cancel: 'Cancel Appointment',
   schedule: 'Schedule Appointment',
@@ -77,29 +78,4 @@ export const statusObj: { [key: string]: StatusType | 'all' } = {
 };
 //----------------
 
-export const statCards = [
-  // {
-  //   status: statusObj.total,
-  //   count: 0,
-  //   label: 'Total appointments',
-  //   icon: StatusIcon.total,
-  // },
-  // {
-  //   status: statusObj.schedule,
-  //   count: 0,
-  //   label: 'Scheduled appointments',
-  //   icon: StatusIcon.scheduled,
-  // },
-  // {
-  //   status: statusObj.create,
-  //   count: 0,
-  //   label: 'Pending appointments',
-  //   icon: StatusIcon.pending,
-  // },
-  {
-    status: statusObj.cancel,
-    count: 0,
-    label: 'Cancelled appointments',
-    icon: StatusIcon.cancelled,
-  },
-];
+
