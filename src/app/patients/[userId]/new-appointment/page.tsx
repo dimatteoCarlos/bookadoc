@@ -2,9 +2,9 @@
 
 'use server';
 
-import Footer from '@/components/Footer';
-import Logo from '@/components/Logo';
-import SideImage from '@/components/SideImage';
+import Footer from '@/components/shared/Footer';
+import Logo from '@/components/shared/Logo';
+import SideImage from '@/components/shared/SideImage';
 import AppointmentForm from '@/components/forms/AppointmentForm';
 import { getPatient, getUser } from '@/lib/actions/patient.actions';
 

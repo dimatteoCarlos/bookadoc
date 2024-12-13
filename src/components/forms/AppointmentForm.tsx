@@ -6,14 +6,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import { Form } from '@/components/ui/form';
-import CustomFormField, { FormFieldCategory } from '../CustomFormField';
+import CustomFormField, { FormFieldCategory } from '../shared/CustomFormField';
 
-import FormSubmitButton from '../FormSubmitButton';
+import FormSubmitButton from '../shared/FormSubmitButton';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { getAppointmentActionSchema } from '@/lib/validationFormSchema';
-import DoctorSelectItem from '../DoctorSelectItem';
+import DoctorSelectItem from '../shared/DoctorSelectItem';
 import clsx from 'clsx';
 import { createAppointment } from '@/lib/actions/appointment.actions';
 //-----------------------

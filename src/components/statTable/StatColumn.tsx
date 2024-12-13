@@ -1,11 +1,11 @@
 // StatColumn
-"use client"
- 
-import { MoreHorizontal } from "lucide-react"
- 
-import { Button } from "@/components/ui/button"
+'use client';
 
-import { ColumnDef } from "@tanstack/react-table"
+import { MoreHorizontal } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+
+import { ColumnDef } from '@tanstack/react-table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,56 +13,71 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
+} from '@/components/ui/dropdown-menu';
+import { appointmentInfoType } from '@/lib/validationFormSchema';
+import { AppointmentType } from '@/types/appwrite.types';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
+  id: string;
+  amount: number;
+  status: 'pending' | 'processing' | 'success' | 'failed';
+  email: string;
+};
 
-export const StatColumn: ColumnDef<Payment>[] = [
-  
-  
+export const StatColumn: ColumnDef<AppointmentType>[] = [
   {
-    accessorKey: "status", 
-    header: "Status",
+    accessorKey: 'ID',
+    cell: ({ row }) => <div className='text-14-medium'>{row.index + 1}</div>,
+    header: '#',
   },
   {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: 'patient',
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
- 
-      return <div className="text-right font-medium">{formatted}</div>
+      const appointment = row.original;
+      return <p className='text-14-medium'>{appointment.patient.name}</p>;
     },
   },
   {
-    id: "actions",
+    accessorKey: 'status',
+    cell: ({ row }) => (
+      <div className='min-w-[115px]'>
+        <StatusBadge status={row.original.status} />
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email',
+  },
+  {
+    accessorKey: 'amount',
+    header: () => <div className='text-right'>Amount</div>,
     cell: ({ row }) => {
-      const payment = row.original
- 
+      const amount = parseFloat(row.getValue('amount'));
+      const formatted = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(amount);
+
+      return <div className='text-right font-medium'>{formatted}</div>;
+    },
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      const payment = row.original;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+            <Button variant='ghost' className='h-8 w-8 p-0'>
+              <span className='sr-only'>Open menu</span>
+              <MoreHorizontal className='h-4 w-4' />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
@@ -74,7 +89,7 @@ export const StatColumn: ColumnDef<Payment>[] = [
             <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];

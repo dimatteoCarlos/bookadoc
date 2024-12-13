@@ -7,89 +7,11 @@ import {StatTable} from '@/components/statTable/StatTable';
 import { StatColumn,  Payment } from '@/components/statTable/StatColumn';
 
 //---------------
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    // ...
-  ]
-}
+
 //----------------
 
 const AdminPage = async () => {
-  const data = await getData()
-  console.log({data})
+
 
   const appointmentsStat = await getRecentAppointmentList();
   const { total_appointments_count, recentAppointments, countByStatus } =
@@ -99,25 +21,25 @@ const AdminPage = async () => {
     {
       status: statusObj.total,
       count: total_appointments_count ?? 0,
-      label: 'Total appointments',
+      label: 'Total',
       icon: StatusIcon.total,
     },
     {
       status: statusObj.schedule,
       count: countByStatus[statusObj.scheduled] ?? 0,
-      label: 'Scheduled appointments',
+      label: 'Scheduled',
       icon: StatusIcon.scheduled,
     },
     {
       status: statusObj.create,
       count: countByStatus[statusObj.create] ?? 0,
-      label: 'Pending appointments',
+      label: 'Pending',
       icon: StatusIcon.pending,
     },
     {
       status: statusObj.cancel,
       count: countByStatus[statusObj.cancelled] ?? 0,
-      label: 'Cancelled appointments',
+      label: 'Cancelled',
       icon: StatusIcon.cancelled,
     },
   ];
@@ -140,8 +62,8 @@ const AdminPage = async () => {
 
         <main className='admin-main'>
           <section className='w-full space-y-4'>
-            <h1 className='header'>Admin Dashboard</h1>
-            <p className='text-dark-700'>Managing New Appointments</p>
+            <h1 className='header'>Admin Board</h1>
+            <p className='text-dark-700'>Managing Appointments</p>
           </section>
 
           <section className='admin-stat'>
@@ -150,8 +72,7 @@ const AdminPage = async () => {
             ))}
           </section>
 
-          {/* <StatTable data = {recentAppointments} columns={StatColumn} /> */}
-          <StatTable data = {data} columns={StatColumn} />
+          <StatTable data = {recentAppointments} columns={StatColumn} />
 
         </main>
       </div>

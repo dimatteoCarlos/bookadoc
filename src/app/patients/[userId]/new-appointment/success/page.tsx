@@ -3,13 +3,13 @@
 //example url: http://localhost:3000/patients/675720cecbf362041d3f/new-appointment/success?appointmentId=6757316d002a41bebf75
 
 'use server';
-import Logo from '@/components/Logo';
+import Logo from '@/components/shared/Logo';
 import { Doctors } from '@/constants';
 import Image from 'next/image';
 import { formatDateTime } from '@/lib/utils';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import Footer from '@/components/Footer';
+import Footer from '@/components/shared/Footer';
 
 // import { buttonVariants } from '@/components/ui/button';
 import { getAppointment } from '@/lib/actions/appointment.actions';

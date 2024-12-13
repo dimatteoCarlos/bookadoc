@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
+// import React, { useCallback, useState } from 'react';
 import { convertFileToUrl } from '@/lib/utils';
 import { useDropzone } from 'react-dropzone';
 
@@ -13,8 +14,7 @@ type FileUploaderPropsType = {
 const FileUploader = ({ files, onChange }: FileUploaderPropsType) => {
   // const [loadedFiles, setLoadedFiles] = useState(files);
 
-  //from react-dropzone
-  // 'onDrop' se ejecuta cuando se sueltan archivos en la zona de carga.
+  //from react-dropzone, 'onDrop' se ejecuta cuando se sueltan archivos en la zona de carga.
   const onDrop = useCallback((acceptedFiles: File[]) => {
     onChange(acceptedFiles);
     // setLoadedFiles(acceptedFiles);
@@ -35,7 +35,7 @@ const FileUploader = ({ files, onChange }: FileUploaderPropsType) => {
       {/* Usa los 'inputProps' para establecer las propiedades del input que permite seleccionar archivos. */}
       <input {...getInputProps()} />
       {files && files?.length > 0 ? (
-      // {loadedFiles && loadedFiles?.length > 0 ? (
+        // {loadedFiles && loadedFiles?.length > 0 ? (
         <>
           <Image
             // src={convertFileToUrl(loadedFiles[0])}
@@ -54,7 +54,7 @@ const FileUploader = ({ files, onChange }: FileUploaderPropsType) => {
         <>
           <Image
             src='/assets/icons/upload.svg'
-            alt='upload' 
+            alt='upload'
             width={40}
             height={40}
           />
@@ -65,7 +65,7 @@ const FileUploader = ({ files, onChange }: FileUploaderPropsType) => {
               and drop
             </p>{' '}
             <p className='text-12-regular'>
-              SVG, PNG, JPG or GIF  (file size less than 1MB)
+              SVG, PNG, JPG or GIF (file size less than 1MB)
             </p>
           </div>
         </>

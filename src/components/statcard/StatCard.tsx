@@ -20,7 +20,7 @@ const StatCard = ({ status, count = 0, label, icon }: StatCardPropsType) => {
         'bg-cancelled': status === statusObj.cancel,
       })}
     >
-      <div className='flex items-center gap-4'>
+      <div className='flex items-center gap-6'>
         <Image
           src={icon}
           alt={`appointment:${status}`}
@@ -30,7 +30,7 @@ const StatCard = ({ status, count = 0, label, icon }: StatCardPropsType) => {
         />
         <h2 className='text-32-bold text-white'>{count}</h2>
       </div>
-      <p className='text-14-regular'>{label}</p>
+      <p className='text-20-regular'>{label}</p>
     </div>
   );
 };

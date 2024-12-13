@@ -2,9 +2,9 @@
 
 'use server';
 
-import Footer from '@/components/Footer';
-import Logo from '@/components/Logo';
-import SideImage from '@/components/SideImage';
+import Footer from '@/components/shared/Footer';
+import Logo from '@/components/shared/Logo';
+import SideImage from '@/components/shared/SideImage';
 import RegisterForm from '@/components/forms/RegisterForm';
 import { getUser } from '@/lib/actions/patient.actions';
 
@@ -18,13 +18,11 @@ const Register = async ({ params, ...searchParams }: SearchParamPropsType) => {
     <main className='h-screen flex max-h-screen '>
       <section className='remove-scrollbar container'>
         <div className='sub-container max-w-[860px] flex-1 flex-col py-10'>
-
           <Logo logoPath={'/assets/icons/logo-full.svg'} />
 
           <RegisterForm user={user!} />
 
           <Footer />
-          
         </div>
       </section>
 

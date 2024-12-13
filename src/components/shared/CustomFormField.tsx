@@ -8,8 +8,8 @@ import {
   FormField,
   FormLabel,
   FormMessage,
-} from './ui/form';
-import { Label } from './ui/label';
+} from '../ui/form';
+import { Label } from '../ui/label';
 
 import {
   Select,
@@ -21,21 +21,21 @@ import {
   // SelectLabel,
 } from '@/components/ui/select';
 
-import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Control } from 'react-hook-form';
 import Image from 'next/image';
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
 
 import { E164Number } from 'libphonenumber-js/core';
-import { Input } from './ui/input';
+import { Input } from '../ui/input';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { GenderOptions } from '@/constants';
 // import { SelectLabel } from '@radix-ui/react-select';
-import { Textarea } from './ui/textarea';
-import { Checkbox } from './ui/checkbox';
+import { Textarea } from '../ui/textarea';
+import { Checkbox } from '../ui/checkbox';
 
 export enum FormFieldCategory {
   USER_INPUT = 'input',
@@ -268,7 +268,7 @@ const RenderControllerFormInput = ({
 // El control, retornado por useForm de react-hook-form, es un objeto que proporciona el acceso a métodos de manejo de formularios como la validación y el registro de los campos.
 
 const CustomFormField = (props: CustomFormFieldPropType) => {
-  const { fieldCategory, control, name, label, isDisabled} = props;
+  const { fieldCategory, control, name, label, isDisabled } = props;
 
   return (
     <div className='customFormField w-full'>

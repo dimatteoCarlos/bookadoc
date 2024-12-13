@@ -2,11 +2,11 @@
 
 'use server';
 
-import Logo from '@/components/Logo';
+import Logo from '@/components/shared/Logo';
 import Image from 'next/image';
-import Footer from '@/components/Footer';
+import Footer from '@/components/shared/Footer';
 import PatientForm from '@/components/forms/PatientForm';
-import { PasskeyModal } from '@/components/PasskeyModal';
+import { PasskeyModal } from '@/components/shared/PasskeyModal';
 
 export default async function Home({ searchParams }: SearchParamPropsType) {
   const awaitedSearchParams = await searchParams;

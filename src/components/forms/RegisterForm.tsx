@@ -8,18 +8,18 @@ import { PatientFormValidationObj } from '@/lib/validationFormSchema';
 import { Form, FormControl } from '@/components/ui/form';
 import { SelectItem } from '@/components/ui/select';
 
-import CustomFormField, { FormFieldCategory } from '../CustomFormField';
+import CustomFormField, { FormFieldCategory } from '../shared/CustomFormField';
 
-import FormSubmitButton from '../FormSubmitButton';
+import FormSubmitButton from '../shared/FormSubmitButton';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Doctors, IdentificationTypes } from '@/constants';
 
 import { registerPatient } from '@/lib/actions/patient.actions';
-import { TitleForm } from '../TitleForm';
+import { TitleForm } from '../shared/TitleForm';
 import Image from 'next/image';
-import FileUploader from '../FileUploader';
+import FileUploader from '../shared/FileUploader';
 
 //----------------------------
 const RegisterForm = ({ user }: { user?: UserType }) => {
@@ -383,9 +383,3 @@ const RegisterForm = ({ user }: { user?: UserType }) => {
 };
 
 export default RegisterForm;
-
-
-
-
-
-

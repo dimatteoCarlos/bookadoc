@@ -6,9 +6,9 @@ import { z } from 'zod';
 import { UserFormValidationObj } from '@/lib/validationFormSchema';
 
 import { Form } from '@/components/ui/form';
-import CustomFormField, { FormFieldCategory } from '../CustomFormField';
+import CustomFormField, { FormFieldCategory } from '../shared/CustomFormField';
 
-import FormSubmitButton from '../FormSubmitButton';
+import FormSubmitButton from '../shared/FormSubmitButton';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createUser } from '@/lib/actions/patient.actions';
@@ -38,20 +38,19 @@ const PatientForm = () => {
   ) => {
     setIsLoading(true);
     try {
-
       const user = { ...values };
 
       //test-----
       // const newUser = { ...user, $id: '674924718b8f09fa0443' };
       // console.log('newUser:', newUser);
       // if (true) {
-        //----------
+      //----------
 
-        // VERIFICAR ANTES SI EL USUARIO Y EL EMAIL YA EXISTEN//
+      // VERIFICAR ANTES SI EL USUARIO Y EL EMAIL YA EXISTEN//
 
-        const newUser = await createUser(user);
-        
-        if (newUser) {
+      const newUser = await createUser(user);
+
+      if (newUser) {
         router.push(`/patients/${newUser.$id}/register`);
       }
     } catch (error) {
