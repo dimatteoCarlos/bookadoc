@@ -47,7 +47,7 @@ declare type   AppointmentActionType = 'create' | 'cancel' | 'schedule'
 declare type CreateAppointmentParamsType = {
   userId: string;
   patient: string;
-  primaryPhysician: string;
+  primaryPhysician?: string;
   reason?: string;
   schedule: Date;
   status: StatusType;
@@ -57,8 +57,9 @@ declare type CreateAppointmentParamsType = {
 declare type UpdateAppointmentParamsType = {
   appointmentId: string;
   userId: string;
-  timeZone: string;
+  timeZone?: string;
   appointment: Appointment;
-  type: string;
+  appointmentAction: AppointmentActionType
+  ;
 
 };

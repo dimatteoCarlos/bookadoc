@@ -1,30 +1,14 @@
 // StatColumn
 'use client';
 
-import { MoreHorizontal } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
-
 import { ColumnDef } from '@tanstack/react-table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { appointmentInfoType } from '@/lib/validationFormSchema';
-import { AppointmentType } from '@/types/appwrite.types';
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Payment = {
-  id: string;
-  amount: number;
-  status: 'pending' | 'processing' | 'success' | 'failed';
-  email: string;
-};
+import { AppointmentType } from '@/types/appwrite.types';
+import StatusBadge from '../shared/StatusBadge';
+import { formatDateTime } from '@/lib/utils';
+import { Doctors } from '@/constants';
+import Image from 'next/image';
+import AppointmentModal from '../shared/AppointmentModal';
 
 export const StatColumn: ColumnDef<AppointmentType>[] = [
   {
@@ -33,14 +17,17 @@ export const StatColumn: ColumnDef<AppointmentType>[] = [
     header: '#',
   },
   {
-    accessorKey: 'patient',
+    accessorKey: 'patient',header:'Patient',
     cell: ({ row }) => {
       const appointment = row.original;
-      return <p className='text-14-medium'>{appointment.patient.name}</p>;
+      return (
+        <p className='text-[12px] font-normal'>{appointment.patient.name}</p>
+      );
     },
   },
   {
     accessorKey: 'status',
+    header: 'Status',
     cell: ({ row }) => (
       <div className='min-w-[115px]'>
         <StatusBadge status={row.original.status} />
@@ -48,47 +35,78 @@ export const StatColumn: ColumnDef<AppointmentType>[] = [
     ),
   },
   {
-    accessorKey: 'email',
-    header: 'Email',
+    accessorKey: 'schedule',
+    header: 'Appointment',
+    cell: ({ row }) => (
+      <p className=' text-[12px] font-normal min-w-[100px]'>
+        {formatDateTime(row.original.schedule).dateTime}
+      </p>
+    ),
   },
   {
-    accessorKey: 'amount',
-    header: () => <div className='text-right'>Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('amount'));
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount);
+    accessorKey: 'primaryPhysician',
+    header: 'Doctor',
 
-      return <div className='text-right font-medium'>{formatted}</div>;
-    },
-  },
-  {
-    id: 'actions',
     cell: ({ row }) => {
-      const payment = row.original;
+      const doctor = Doctors.find(
+        (doc) => doc.name === row.original.primaryPhysician
+      );
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='h-8 w-8 p-0'>
-              <span className='sr-only'>Open menu</span>
-              <MoreHorizontal className='h-4 w-4' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className='flex items-center gap-3'>
+          {!!doctor ? (
+            <>
+              {' '}
+              <Image
+                src={doctor?.image!}
+                alt={`Dr. ${doctor!.name}`}
+                width={36}
+                height={36}
+                className={'rounded-full border border-dark-500 size-8'}
+              />
+              <p className='whitespace-nowrap text-[12px] font-normal'>{`Dr. ${
+                doctor!.name
+              }`}</p>
+            </>
+          ) : (
+            <p className='whitespace-nowrap font-normalize text-gray-500 text-[12px]'>
+              Not Assigned
+            </p>
+          )}
+        </div>
+      );
+    },
+  },
+
+  {
+    id: 'actions',
+    header: () => <div className='pl-4'>Actions</div>,
+
+    // cell:({row:{original:data}})=>{
+
+    cell: ({ row }) => {
+      const { patient, userId } = row.original;
+      // console.log({ patient, userId });
+
+      return (
+        <div className='flex gap-1'>
+          <AppointmentModal
+            patientId={patient.$id}
+            appointment={row.original}
+            action={'schedule'}
+            userId={userId}
+            // title='Schedule Appointment'
+            // description='Please confirm the following details to schedule.'
+          />
+          <AppointmentModal
+            patientId={patient.$id}
+            appointment={row.original}
+            action={'cancel'}
+            userId={userId}
+            // title='Cancel Appointment'
+            // description='Are you sure?'
+          />
+        </div>
       );
     },
   },

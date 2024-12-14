@@ -12,7 +12,6 @@ export default async function Home({ searchParams }: SearchParamPropsType) {
   const awaitedSearchParams = await searchParams;
 
   const isAdmin = awaitedSearchParams?.admin === 'true';
-  console.log('awaitedSearchParams:', awaitedSearchParams);
 
   return (
     <main className={'flex h-screen max-h-screen'}>

@@ -6,28 +6,17 @@ import Footer from '@/components/shared/Footer';
 import Logo from '@/components/shared/Logo';
 import SideImage from '@/components/shared/SideImage';
 import AppointmentForm from '@/components/forms/AppointmentForm';
-import { getPatient, getUser } from '@/lib/actions/patient.actions';
+import { getPatient } from '@/lib/actions/patient.actions';
 
 const NewAppointment = async ({
   params,
-  ...searchParams
+  // ...searchParams
 }: SearchParamPropsType) => {
   const { userId } = await params;
 
   const patientInfo = await getPatient(userId);
 
-  const user = await getUser(userId);
 
-  // console.log(
-  //   typeof searchParams,
-  //   await searchParams,
-  //   'userId:',
-  //   userId,
-  //   user,
-  //   patientInfo
-  // );
-
-  //appointmentAction: create, cancel, update
 
   return (
     <main className='h-screen flex max-h-screen '>

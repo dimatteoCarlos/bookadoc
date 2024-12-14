@@ -7,11 +7,13 @@ const dateFormat = 'dd/MM/yyyy - h:mm a';
 const validateBusinessHours = (date: Date) => {
   const startOfDay = setHours(setMinutes(date, 0), 8); //8:00 am}
   const endOfDay = setHours(setMinutes(date, 0), 17); //5:00pm}
-  console.log('Business Hours:', date, startOfDay, endOfDay);
+  // console.log('Business Hours:', date, 'from:', startOfDay, ' to:', endOfDay);
   return date >= startOfDay && date <= endOfDay;
 };
 
-export const minAvailableDate = new Date(Date.now());
+export const minAvailableDate = new Date(
+  new Date().setDate(new Date().getDate() + 1)
+);
 
 export const UserFormValidation = z.object({
   name: z
@@ -43,7 +45,7 @@ export const PatientFormValidation = z.object({
 
   //coerce: Es un método de Zod que permite forzar la conversión de un valor a un tipo específico, en lugar de solo validar si el valor ya es del tipo esperado.
 
-  birthDate: z.coerce.date(),
+  birthDate: z.coerce.date(), //VERFICIAR FECHAS DE MAYORIA DE EDAD
   gender: z.enum(['male', 'female', 'other']),
   address: z
     .string()
@@ -167,7 +169,7 @@ const BaseAppointmentSchema = z.object({
         return true;
       },
       {
-        message: `Our availble dates are after : ${format(
+        message: `Our available dates are after : ${format(
           minAvailableDate,
           'dd/MM/yyyy'
         )}`,
@@ -191,6 +193,7 @@ export const ScheduleAppointmentSchema = BaseAppointmentSchema.extend({
 });
 
 export const CancelAppointmentSchema = BaseAppointmentSchema.extend({
+  primaryPhysician: z.string().optional(),
   reason: z.string().optional(),
   cancellationReason: z
     .string()
@@ -208,10 +211,10 @@ export type appointmentInfoType = {
 
 export const appointmentFormDefaultValues = {
   primaryPhysician: '',
-  schedule: new Date(),
+  schedule: new Date(new Date().setDate(new Date().getDate() + 1)),
   reason: '',
   note: '',
-  cancellationReason: '',
+  cancellationReason: 'only valid when cancelling',
 };
 
 export function getAppointmentActionSchema(type: AppointmentActionType) {

@@ -13,6 +13,9 @@ import {
 } from '../appwrite.config';
 import { parseStringify } from '../utils';
 import { AppointmentType } from '@/types/appwrite.types';
+import { revalidatePath } from 'next/cache';
+
+import { formatDateTime } from '../utils';
 
 export const createAppointment = async (
   appointment: CreateAppointmentParamsType
@@ -25,7 +28,7 @@ export const createAppointment = async (
       appointment
     );
 
-    console.log('Reg Action parseStringify: ', newAppointment);
+    // console.log('Reg Action parseStringify: ', newAppointment);
 
     return parseStringify<Models.Document>(newAppointment);
   } catch (error) {
@@ -61,17 +64,15 @@ type Counts = {
   cancelled: number;
 };
 
-
 //GET RECENT APPOINTMENTS
 
 export const getRecentAppointmentList = async () => {
-  
   let countByStatus: Counts = {
     scheduled: 0,
     pending: 0,
     cancelled: 0,
   };
-  
+
   try {
     /* The response for a - listDocuments of database appwrite - request with a query will contain:
         total: The total number of matching documents in the collection (ignoring pagination).
@@ -90,16 +91,74 @@ export const getRecentAppointmentList = async () => {
       const statusKey = appointment.status;
       countByStatus[statusKey]++;
     }
+    // console.log("🚀 ~ getRecentAppointmentList ~ countByStatus:", countByStatus)
 
     const data = {
       total_appointments_count: response.total,
       recentAppointments,
       countByStatus,
     };
+    // console.log("🚀 ~ getRecentAppointmentList ~ data:", data)
 
     return parseStringify(data);
-    
   } catch (error) {
     console.error('Error occurred while retrieving the recent appointments');
+  }
+};
+
+//------------
+//UPDATE APPOINTMENT
+type AppointmentToUpdateInfoType = {
+  userId: string;
+  appointmentId: string | undefined;
+  appointment: {
+    primaryPhysician: string;
+    schedule: Date;
+    status: StatusType;
+    cancellationReason?: string;
+  };
+  appointmentAction: AppointmentActionType;
+};
+
+export const updateActionAppointment = async ({
+  appointmentId,
+  appointment,
+  userId,
+  appointmentAction,
+}: UpdateAppointmentParamsType) => {
+  try {
+    const updatedAppointment = await databases_module.updateDocument(
+      DATABASE_ID!,
+      APPOINTMENT_COLLECTION_ID!,
+      appointmentId!,
+      appointment
+    );
+    console.log('🚀 ~ updatedAppointment:', updatedAppointment);
+
+    if (!updatedAppointment) {
+      throw new Error('something went wrong went updating appointment');
+    }
+
+    const timeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    const smsMessage = `user: ${userId} Greetings from BookaDoc. ${
+      appointmentAction === 'schedule'
+        ? `Your appointment is confirmed for ${
+            formatDateTime(appointment.schedule!, timeZone).dateTime
+          } with Dr. ${appointment.primaryPhysician}`
+        : `This is to inform that your appointment for ${
+            formatDateTime(appointment.schedule!, timeZone).dateTime
+          } is cancelled. Reason:  ${appointment.cancellationReason}`
+    }.`;
+
+    console.log(smsMessage);
+
+    // await sendSMSNotification(userId, smsMessage);
+
+    revalidatePath('/admin');
+
+    return parseStringify(updatedAppointment);
+  } catch (error) {
+    console.error('Error occurred while updating appointment', error);
   }
 };

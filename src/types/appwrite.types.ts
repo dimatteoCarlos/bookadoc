@@ -30,7 +30,7 @@ export declare type AppointmentType=Models.Document &  {
   patient: PatientType;
   schedule: Date;
   status: StatusType;
-  primaryPhysician: string;
+  primaryPhysician?: string;
   reason: string;
   note: string;
   userId: string;

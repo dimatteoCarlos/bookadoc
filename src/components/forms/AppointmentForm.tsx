@@ -15,36 +15,36 @@ import { useRouter } from 'next/navigation';
 import { getAppointmentActionSchema } from '@/lib/validationFormSchema';
 import DoctorSelectItem from '../shared/DoctorSelectItem';
 import clsx from 'clsx';
-import { createAppointment } from '@/lib/actions/appointment.actions';
+import {
+  createAppointment,
+  updateActionAppointment,
+  // updateAppointemnet,
+} from '@/lib/actions/appointment.actions';
+import { AppointmentType } from '@/types/appwrite.types';
+import { buttonLabels, statusObj } from '@/constants';
 //-----------------------
-const statusObj = {
-  cancel: 'cancelled',
-  schedule: 'scheduled',
-  create: 'pending',
-  default: 'pending',
-};
 
-const buttonLabels = {
-  cancel: 'Cancel Appointment',
-  schedule: 'Schedule Appointment',
-  create: 'Submit Appointment',
-  default: 'Submit Appointment',
-};
 //---------------------
 export type AppointmentFormPropType = {
+  appointmentAction: 'create' | 'cancel' | 'schedule'; //AppointmentActionType
+
+  //create appointment & update appointment
   userId: string;
   patientId: string;
-  appointmentAction: 'create' | 'cancel' | 'schedule'; //AppointmentActionType
+
+  // update appointment
+  existentAppointment?: AppointmentType;
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  // setOpen?:(open:boolean)=>void;
 };
 
 const AppointmentForm = ({
   userId,
   patientId,
   appointmentAction,
-}: // appointment,
-// setOpen,
-
-AppointmentFormPropType) => {
+  existentAppointment,
+  setOpen,
+}: AppointmentFormPropType) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const formSchema = getAppointmentActionSchema(appointmentAction);
@@ -52,11 +52,30 @@ AppointmentFormPropType) => {
   const form = useForm<z.infer<typeof formSchema.validationSchema>>({
     resolver: zodResolver(formSchema.validationSchema),
 
-    defaultValues: formSchema.defaultValues,
+    defaultValues: {
+      ...formSchema.defaultValues,
+      primaryPhysician:
+        existentAppointment?.primaryPhysician ??
+        formSchema.defaultValues.primaryPhysician,
+
+      schedule:
+        appointmentAction === 'create'
+          ? new Date(new Date().setDate(new Date().getDate() + 1))
+          : new Date(existentAppointment!.schedule) ??
+            new Date(formSchema.defaultValues.schedule),
+
+      reason: existentAppointment?.reason ?? formSchema.defaultValues.reason,
+      note: existentAppointment?.note ?? formSchema.defaultValues.note,
+
+      cancellationReason: !existentAppointment
+        ? formSchema.defaultValues.cancellationReason
+        : existentAppointment!.cancellationReason ??
+          formSchema.defaultValues.cancellationReason,
+    },
   });
+
   //------------------------
   const onSubmit = async (
-    // values: z.infer<typeof formSchema>
     values: z.infer<typeof formSchema.validationSchema>
   ) => {
     setIsLoading(true);
@@ -77,16 +96,36 @@ AppointmentFormPropType) => {
           cancellationReason,
         };
 
-        console.log('appointmentData:', appointmentData);
-
         const newAppointment = await createAppointment(appointmentData);
-        console.log('🚀 ~ newAppointment:', newAppointment);
 
         if (newAppointment) {
           form.reset();
           router.replace(
             `/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.$id}`
           );
+        }
+      } else {
+        const appointmentId = existentAppointment!.$id;
+
+        const appointmentToUpdateInfo = {
+          userId,
+          appointmentId,
+          appointment: {
+            primaryPhysician,
+            schedule,
+            status: statusObj[appointmentAction] as StatusType, //status according to the action cancel or schedule
+            cancellationReason,
+          },
+          appointmentAction,
+        };
+
+        const updatedAppointment = await updateActionAppointment(
+          appointmentToUpdateInfo
+        );
+
+        if (updatedAppointment) {
+          setOpen && setOpen(false);
+          form.reset();
         }
       }
     } catch (error) {
@@ -101,14 +140,16 @@ AppointmentFormPropType) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className='form__container flex-1 space-y-6 mb-4 '
+        className='form__container flex-1 space-y-6 mb-1 '
       >
-        <section className='mb-12 space-y-4'>
-          <h1 className='header'>Book your Appointment 📅</h1>
-          <p className='text-dark-700'>
-            Request a new appointment in 10 seconds
-          </p>
-        </section>
+        {appointmentAction === 'create' && (
+          <section className='mb-3 space-y-2'>
+            <h1 className='header'>Book your Appointment 📅</h1>
+            <p className='text-dark-700'>
+              Request the appointment in 10 seconds
+            </p>
+          </section>
+        )}
 
         {appointmentAction !== 'cancel' && (
           <>
@@ -130,13 +171,11 @@ AppointmentFormPropType) => {
               showTimeSelect
               dateFormat='dd/MM/yyyy - h:mm aa'
               showYearDropdown={false}
-
-              //how to limit the time value to office hours?
             />
 
             <div
               className={clsx(
-                'flex flex-col gap-6',
+                'flex  gap-4  ',
                 appointmentAction === 'create' && 'xl:flex-row'
               )}
             >
@@ -144,11 +183,10 @@ AppointmentFormPropType) => {
                 fieldCategory={FormFieldCategory.TEXTAREA}
                 control={form.control}
                 name='reason'
-                label='Appointment reason'
-                placeholder='ex.: Annual/Monthly check-up'
+                label='Reason for the appointment'
+                placeholder='ex.: reason of consultation'
                 isDisabled={appointmentAction === 'schedule'}
               />
-
               <CustomFormField
                 fieldCategory={FormFieldCategory.TEXTAREA}
                 control={form.control}
@@ -161,8 +199,17 @@ AppointmentFormPropType) => {
           </>
         )}
 
-        {appointmentAction !== 'cancel' && (
+        {appointmentAction === 'cancel' && (
           <>
+            <CustomFormField
+              fieldCategory={FormFieldCategory.DATE_PICKER}
+              control={form.control}
+              name='schedule'
+              label='Expected appointment date in office hours 8 am to 5 pm'
+              showTimeSelect
+              dateFormat='dd/MM/yyyy - h:mm aa'
+              showYearDropdown={false}
+            />
             <CustomFormField
               fieldCategory={FormFieldCategory.TEXTAREA}
               control={form.control}
@@ -177,7 +224,7 @@ AppointmentFormPropType) => {
           isLoading={isLoading}
           className={clsx(
             'w-full shad-primary-btn',
-            appointmentAction === 'cancel' && 'shad-danger-btn'
+            appointmentAction == 'cancel' && 'shad-danger-btn'
           )}
         >
           {buttonLabel}

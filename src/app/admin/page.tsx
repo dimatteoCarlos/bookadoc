@@ -3,19 +3,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { StatusIcon, statusObj } from '@/constants';
 import { getRecentAppointmentList } from '@/lib/actions/appointment.actions';
-import {StatTable} from '@/components/statTable/StatTable';
-import { StatColumn,  Payment } from '@/components/statTable/StatColumn';
+import { StatTable } from '@/components/statTable/StatTable';
+import { StatColumn } from '@/components/statTable/StatColumn';
 
 //---------------
 
 //----------------
 
 const AdminPage = async () => {
+  const appointmentsStat = await getRecentAppointmentList(); //fix ts
 
-
-  const appointmentsStat = await getRecentAppointmentList();
   const { total_appointments_count, recentAppointments, countByStatus } =
     appointmentsStat;
+
+  // console.log("🚀 ~ AdminPage ~ recentAppointments:", recentAppointments)
 
   const statCards = [
     {
@@ -26,7 +27,7 @@ const AdminPage = async () => {
     },
     {
       status: statusObj.schedule,
-      count: countByStatus[statusObj.scheduled] ?? 0,
+      count: countByStatus[statusObj.schedule],
       label: 'Scheduled',
       icon: StatusIcon.scheduled,
     },
@@ -38,7 +39,7 @@ const AdminPage = async () => {
     },
     {
       status: statusObj.cancel,
-      count: countByStatus[statusObj.cancelled] ?? 0,
+      count: countByStatus[statusObj.cancel] ?? 0,
       label: 'Cancelled',
       icon: StatusIcon.cancelled,
     },
@@ -46,7 +47,7 @@ const AdminPage = async () => {
 
   return (
     <>
-      <div className='mx-auto flex max-w-7xl flex-col space-y-14'>
+      <div className='admin__page mx-auto flex max-w-7xl flex-col space-y-14 '>
         <header className='admin-header'>
           <Link href='/' className='cursor-pointer'>
             <Image
@@ -59,22 +60,22 @@ const AdminPage = async () => {
           </Link>
           <p className='text-16-semibold'>Admin</p>
         </header>
+        <div className='admin__board--container flex justify-center '>
+          <main className='admin-main max-w-[800px] flex items-center '>
+            <section className='w-full space-y-4'>
+              <h1 className='header'>Admin Board</h1>
+              <p className='text-dark-700'>Managing Appointments</p>
+            </section>
 
-        <main className='admin-main'>
-          <section className='w-full space-y-4'>
-            <h1 className='header'>Admin Board</h1>
-            <p className='text-dark-700'>Managing Appointments</p>
-          </section>
+            <section className='admin-stat grid grid-cols-4'>
+              {statCards.map((card, i) => (
+                <StatCard {...card} key={i} />
+              ))}
+            </section>
 
-          <section className='admin-stat'>
-            {statCards.map((card, i) => (
-              <StatCard {...card} key={i} />
-            ))}
-          </section>
-
-          <StatTable data = {recentAppointments} columns={StatColumn} />
-
-        </main>
+            <StatTable data={recentAppointments} columns={StatColumn} />
+          </main>
+        </div>
       </div>
     </>
   );

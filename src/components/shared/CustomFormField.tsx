@@ -33,9 +33,9 @@ import { Input } from '../ui/input';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { GenderOptions } from '@/constants';
-// import { SelectLabel } from '@radix-ui/react-select';
 import { Textarea } from '../ui/textarea';
 import { Checkbox } from '../ui/checkbox';
+import clsx from 'clsx';
 
 export enum FormFieldCategory {
   USER_INPUT = 'input',
@@ -106,6 +106,7 @@ const RenderControllerFormInput = ({
           )}
           <FormControl>
             <Input
+              name={name}
               placeholder={placeholder}
               {...field}
               className='shad-input border-0 '
@@ -151,12 +152,13 @@ const RenderControllerFormInput = ({
           )}
           <FormControl>
             <Textarea
+              name={name}
               placeholder={placeholder}
               {...field}
-              className={`shad-textArea border-0 resize-none w-full`}
+              className={clsx(`shad-textArea border-0 w-full resize`)}
               disabled={isDisabled}
-              maxLength='255'
-              rows='5'
+              maxLength='250'
+              rows='3'
             />
           </FormControl>
         </div>
@@ -268,7 +270,7 @@ const RenderControllerFormInput = ({
 // El control, retornado por useForm de react-hook-form, es un objeto que proporciona el acceso a métodos de manejo de formularios como la validación y el registro de los campos.
 
 const CustomFormField = (props: CustomFormFieldPropType) => {
-  const { fieldCategory, control, name, label, isDisabled } = props;
+  const { fieldCategory, control, name, label } = props;
 
   return (
     <div className='customFormField w-full'>

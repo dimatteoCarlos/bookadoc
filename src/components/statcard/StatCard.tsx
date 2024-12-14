@@ -10,11 +10,10 @@ type StatCardPropsType = {
 };
 
 const StatCard = ({ status, count = 0, label, icon }: StatCardPropsType) => {
-
-
+  
   return (
     <div
-      className={clsx('stat-card', {
+      className={clsx('stat-card max-w-full', {
         'bg-appointments': status === statusObj.schedule || status === 'all',
         'bg-pending': status === statusObj.create,
         'bg-cancelled': status === statusObj.cancel,

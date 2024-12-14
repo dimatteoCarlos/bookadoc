@@ -21,7 +21,6 @@
   }
 
   .remove-scrollbar::-webkit-scrollbar-thumb:hover {
-    /* background: #1e2238; */
     background: transparent;
   }
 }
@@ -71,7 +70,8 @@
   }
 
   .header {
-    @apply text-32-bold md:text-36-bold;
+    @apply text-24-bold md:text-32-bold;
+    /* @apply text-32-bold md:text-36-bold; */
   }
 
   .sub-header {
@@ -106,7 +106,7 @@
 
   /* ===== ADMIN */
   .admin-header {
-    @apply sticky top-3 z-20 mx-3 flex items-center justify-between rounded-2xl bg-dark-200 px-[1.5rem] py-5 shadow-lg xl:px-12;
+    @apply sticky top-3 z-20 mx-3 flex items-center justify-between  rounded-2xl bg-dark-200 px-[1.5rem] py-5 shadow-lg xl:px-12;
   }
 
   .admin-main {
@@ -114,7 +114,8 @@
   }
 
   .admin-stat {
-    @apply flex w-full flex-col justify-between gap-5 sm:flex-row xl:gap-10;
+    @apply flex flex-col gap-4 sm:grid w-full sm:grid-cols-2 md:grid-cols-4 justify-between xl:gap-10;
+    /* @apply flex w-full flex-col justify-between gap-5 sm:flex-row xl:gap-10 ; */
   }
 
   /* ==== FORM */
@@ -137,7 +138,7 @@
 
   /* ==== Stat Card */
   .stat-card {
-    @apply flex flex-1 flex-col gap-6 rounded-2xl bg-cover p-6 shadow-lg;
+    @apply flex flex-1 flex-col gap-6 rounded-2xl bg-cover p-6 shadow-lg items-center sm:items-start;
   }
 
   /* ==== Status Badge */
@@ -168,12 +169,11 @@
     @apply text-[36px] leading-[40px] font-bold;
   }
 
-  .text-24-bold {
-    @apply text-[24px] leading-[28px] font-bold;
-  }
-
   .text-32-bold {
     @apply text-[32px] leading-[36px] font-bold;
+  }
+  .text-24-bold {
+    @apply text-[24px] leading-[28px] font-bold;
   }
 
   .text-18-bold {

@@ -9,10 +9,9 @@ export function parseStringify<T>(obj: T) {
   //stringify - Converts a JavaScript value to a JavaScript Object Notation (JSON) string.
   //parse - Converts a JavaScript Object Notation (JSON) string, into an object.
 
-  // console.log('desde utils>', JSON.parse(JSON.stringify(obj)))
   return JSON.parse(JSON.stringify(obj));
 }
-
+// get the file name using reg exp
 export function getFileName(filePath: string): string {
   const regex = /[^/\\]+(?=\.[^/\\]+$)/;
   const match = filePath.match(regex);
@@ -40,6 +39,10 @@ export const convertFileToUrl = (file: File) => {
 // ------
 
 // FORMAT DATE TIME
+
+// const userTimeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+// console.log(`User's Time Zone: ${userTimeZone}`);
+
 export const formatDateTime = (
   dateString: Date | string,
   timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone
