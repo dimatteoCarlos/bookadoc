@@ -3,6 +3,8 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import React from 'react';
 
+
+
 const StatusBadge = ({ status }: { status: StatusType }) => {
   const bubleStyle = {
     scheduled: 'bg-green-600',
@@ -10,20 +12,30 @@ const StatusBadge = ({ status }: { status: StatusType }) => {
     cancelled: 'bg-red-600',
   };
 
+  // const StatusIconTable:{[key in StatusType]:string} = {
+  //   ...StatusIcon,
+  //   scheduled: '/assets/icons/check.svg',
+  // };
+  const StatusIconTable: { [key in StatusType]: string } = {
+    scheduled: '/assets/icons/check.svg',  // Sobrescribe el valor de 'scheduled'
+    pending: StatusIcon.pending,           // Usa el valor de 'pending' de StatusIcon
+    cancelled: StatusIcon.cancelled,       // Usa el valor de 'cancelled' de StatusIcon
+  };
+
   return (
     <div className={clsx('status-badge', bubleStyle[status])}>
       <Image
-        src={StatusIcon[status]}
+        src={StatusIconTable[status]}
         alt='doctor'
-        width={24}
-        height={24}
-        className='h-fit w-3'
+        width={32}
+        height={32}
+        className='h-fit w-4'
       />
       <p
-        className={clsx('text-12-semibold capitalize', {
-          'text-green-500': status === statusObj.scheduled,
+        className={clsx('text-14-semibold capitalize', {
+          'text-green-500': status === statusObj.schedule,
           'text-blue-500': status === statusObj.create,
-          'text-red-500': status === statusObj.cancelled,
+          'text-red-500': status === statusObj.cancel,
         })}
       >
         {' '}
