@@ -148,7 +148,7 @@ const BaseAppointmentSchema = z.object({
         // Verificar si la fecha es válida antes de hacer la validación adicional
 
         if (!isValid(val)) {
-          console.log(val, ' is not a valid date');
+          console.error(val, ' is not a valid date');
           return false; //
         }
 

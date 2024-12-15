@@ -6,16 +6,18 @@ import {
   DATABASE_ID,
   databases_module,
   APPOINTMENT_COLLECTION_ID,
+  messaging_module,
   // ENDPOINT,
   // PROJECT_ID,
   // users_module,
   // BUCKET_ID,
 } from '../appwrite.config';
-import { parseStringify } from '../utils';
+import { chooseElem, parseStringify, shuffleArray } from '../utils';
 import { AppointmentType } from '@/types/appwrite.types';
 import { revalidatePath } from 'next/cache';
 
 import { formatDateTime } from '../utils';
+import { cancelMsg, confirmMsg } from '@/constants';
 
 export const createAppointment = async (
   appointment: CreateAppointmentParamsType
@@ -106,19 +108,36 @@ export const getRecentAppointmentList = async () => {
   }
 };
 
+//---------sms notification twilio and appwrite
+//  SEND SMS NOTIFICATION
+export const sendSMSNotification = async (userId: string, content: string) => {
+  try {
+    // https://appwrite.io/docs/references/1.5.x/server-nodejs/messaging#createSms
+    const message = await messaging_module.createSms(
+      ID.unique(),
+      content,
+      [], //array of topics
+      [userId]
+    );
+    return parseStringify(message);
+  } catch (error) {
+    console.error('An error occurred while sending sms:', error);
+  }
+};
+
 //------------
 //UPDATE APPOINTMENT
-type AppointmentToUpdateInfoType = {
-  userId: string;
-  appointmentId: string | undefined;
-  appointment: {
-    primaryPhysician: string;
-    schedule: Date;
-    status: StatusType;
-    cancellationReason?: string;
-  };
-  appointmentAction: AppointmentActionType;
-};
+// type AppointmentToUpdateInfoType = {
+//   userId: string;
+//   appointmentId: string | undefined;
+//   appointment: {
+//     primaryPhysician: string;
+//     schedule: Date;
+//     status: StatusType;
+//     cancellationReason?: string;
+//   };
+//   appointmentAction: AppointmentActionType;
+// };
 
 export const updateActionAppointment = async ({
   appointmentId,
@@ -133,27 +152,35 @@ export const updateActionAppointment = async ({
       appointmentId!,
       appointment
     );
-    console.log('🚀 ~ updatedAppointment:', updatedAppointment);
+    // console.log('🚀 ~ updatedAppointment:', updatedAppointment);
 
     if (!updatedAppointment) {
       throw new Error('something went wrong went updating appointment');
     }
 
     const timeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+    //-----------------
+
+    const chosenMsg = appointmentAction === 'schedule' ? confirmMsg : cancelMsg;
+
+    const messageOptionsArray = Object.values(chosenMsg);
+
+    const message = chooseElem(shuffleArray(messageOptionsArray));
+    //-----------------
 
     const smsMessage = `user: ${userId} Greetings from BookaDoc. ${
       appointmentAction === 'schedule'
-        ? `Your appointment is confirmed for ${
+        ? `${message} ${
             formatDateTime(appointment.schedule!, timeZone).dateTime
           } with Dr. ${appointment.primaryPhysician}`
-        : `This is to inform that your appointment for ${
+        : `${message} ${
             formatDateTime(appointment.schedule!, timeZone).dateTime
           } is cancelled. Reason:  ${appointment.cancellationReason}`
     }.`;
 
     console.log(smsMessage);
 
-    // await sendSMSNotification(userId, smsMessage);
+    // await sendSMSNotification(userId, smsMessage); //it worked just fine
 
     revalidatePath('/admin');
 

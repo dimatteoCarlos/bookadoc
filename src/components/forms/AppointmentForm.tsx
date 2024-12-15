@@ -193,7 +193,7 @@ const AppointmentForm = ({
                 name='note'
                 label='Comments / notes'
                 placeholder='ex.: Urgent meeting came up'
-                isDisabled={appointmentAction === 'schedule'}
+                // isDisabled={appointmentAction === 'schedule'}
               />
             </div>
           </>

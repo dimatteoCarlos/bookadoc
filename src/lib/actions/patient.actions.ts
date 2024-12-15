@@ -19,12 +19,10 @@ import { PatientType } from '@/types/appwrite.types';
 //CREATE APPWRITE USER
 
 export const createUser = async (user: CreateUserParamsType) => {
-  console.log('execute crateUser');
 
   try {
     const { email, name, phone } = user;
 
-    console.log('action:', email, name, phone);
 
     const newuser = await users_module.create(
       'unique()',
@@ -34,7 +32,6 @@ export const createUser = async (user: CreateUserParamsType) => {
       undefined,
       user.name
     ); // ordered arg from appwrite
-    console.log('newUser:', newuser);
 
     return parseStringify(newuser);
   } catch (error: any) {
@@ -162,7 +159,7 @@ export async function getPatient(userId: string) {
 
     return parseStringify(patientDocuments.documents[0]) as PatientType;
   } catch (error) {
-    console.log(
+    console.error(
       'An error occurred while retrieving the patient documents of ',
       userId,
       ' ',

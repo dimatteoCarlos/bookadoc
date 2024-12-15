@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx';
+import exp from 'constants';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -136,4 +137,20 @@ export const getEncryptedKey = () => {
   return null;
 };
 
-//------------------------
+//----------shuffle an array------
+// // algoritmo de Fisher-Yates (también conocido como el Knuth shuffle)
+export type ElementType = number | string | object;
+
+export const shuffleArray = (arr: (number | string | object)[]) => {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const rndI = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[rndI]] = [arr[rndI], arr[i]];
+  }
+  return arr;
+};
+
+export const chooseElem = (arr: ElementType[]) => {
+  const rndI = Math.floor(Math.random() * (arr.length - 1));
+  const el = arr[rndI];
+  return el;
+};
