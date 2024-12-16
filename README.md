@@ -57,14 +57,10 @@ Follow these steps to set up the project on your local machine:
    Using **npm**:
 
    ```bash
-   npm install
+   npm install --legacy-peer-deps
    ```
 
-   Or using **yarn**:
 
-   ```bash
-   yarn install
-   ```
 
 ## Usage
 
